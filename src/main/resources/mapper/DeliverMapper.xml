@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xy.wmall.mapper.DeliverMapper">
+	
+  	<resultMap id="BaseResultMap" type="com.xy.wmall.model.Deliver">
+		<id column="id" property="id" />	
+	    <result column="proxy_id" property="proxyId" />
+	    <result column="parent_proxy_id" property="parentProxyId" />
+	    <result column="authorization_code" property="authorizationCode" />
+	    <result column="receive_name" property="receiveName" />
+	    <result column="receive_phone" property="receivePhone" />
+	    <result column="receive_address" property="receiveAddress" />
+	    <result column="courier_price" property="courierPrice" />
+	    <result column="deliver_type" property="deliverType" />
+	    <result column="deliver_status" property="deliverStatus" />
+	    <result column="inventory_status" property="inventoryStatus" />
+	    <result column="remark" property="remark" />
+	    <result column="create_user_id" property="createUserId" />
+	    <result column="create_time" property="createTime" />
+	    <result column="update_user_id" property="updateUserId" />
+	    <result column="update_time" property="updateTime" />
+	    <result column="is_delete" property="isDelete" />
+	    <result column="wechat_name" property="wechatName" />
+  	</resultMap>
+  	
+  	<!-- 表所有字段 -->
+  	<sql id="Base_Column_List">
+  		id, proxy_id, parent_proxy_id, authorization_code, receive_name, receive_phone, receive_address, courier_price, deliver_type, deliver_status, inventory_status, remark, create_user_id, create_time, update_user_id, update_time, is_delete
+  	</sql>
+  	
+  	<!-- 根据主键查询 -->
+  	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    	<include refid="Base_Column_List" />
+    	from t_deliver
+		where id = #{id}
+  	</select>
+  	
+  	<!-- 新增数据库记录 -->
+  	<insert id="insert" parameterType="com.xy.wmall.model.Deliver">
+    	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	    insert into t_deliver
+    		<trim prefix="(" suffix=")" suffixOverrides=",">
+		      	<if test="id != null">
+		        	id,
+		      	</if>
+		      	<if test="proxyId != null">
+		        	proxy_id,
+		      	</if>
+		      	<if test="parentProxyId != null">
+		        	parent_proxy_id,
+		      	</if>
+		      	<if test="authorizationCode != null">
+		        	authorization_code,
+		      	</if>
+		      	<if test="receiveName != null">
+		        	receive_name,
+		      	</if>
+		      	<if test="receivePhone != null">
+		        	receive_phone,
+		      	</if>
+		      	<if test="receiveAddress != null">
+		        	receive_address,
+		      	</if>
+		      	<if test="courierPrice != null">
+		        	courier_price,
+		      	</if>
+		      	<if test="deliverType != null">
+		        	deliver_type,
+		      	</if>
+		      	<if test="deliverStatus != null">
+		        	deliver_status,
+		      	</if>
+		      	<if test="inventoryStatus != null">
+		        	inventory_status,
+		      	</if>
+		      	<if test="remark != null">
+		        	remark,
+		      	</if>
+		      	<if test="createUserId != null">
+		        	create_user_id,
+		      	</if>
+		      	<if test="createTime != null">
+		        	create_time,
+		      	</if>
+		      	<if test="updateUserId != null">
+		        	update_user_id,
+		      	</if>
+		      	<if test="updateTime != null">
+		        	update_time,
+		      	</if>
+		      	<if test="isDelete != null">
+		        	is_delete,
+		      	</if>
+    		</trim>
+    	values
+    		<trim prefix="(" suffix=")" suffixOverrides=",">
+      			<if test="id != null">
+        			#{id},
+      			</if>
+      			<if test="proxyId != null">
+        			#{proxyId},
+      			</if>
+      			<if test="parentProxyId != null">
+        			#{parentProxyId},
+      			</if>
+      			<if test="authorizationCode != null">
+        			#{authorizationCode},
+      			</if>
+      			<if test="receiveName != null">
+        			#{receiveName},
+      			</if>
+      			<if test="receivePhone != null">
+        			#{receivePhone},
+      			</if>
+      			<if test="receiveAddress != null">
+        			#{receiveAddress},
+      			</if>
+      			<if test="courierPrice != null">
+        			#{courierPrice},
+      			</if>
+      			<if test="deliverType != null">
+        			#{deliverType},
+      			</if>
+      			<if test="deliverStatus != null">
+        			#{deliverStatus},
+      			</if>
+      			<if test="inventoryStatus != null">
+        			#{inventoryStatus},
+      			</if>
+      			<if test="remark != null">
+        			#{remark},
+      			</if>
+      			<if test="createUserId != null">
+        			#{createUserId},
+      			</if>
+      			<if test="createTime != null">
+        			#{createTime},
+      			</if>
+      			<if test="updateUserId != null">
+        			#{updateUserId},
+      			</if>
+      			<if test="updateTime != null">
+        			#{updateTime},
+      			</if>
+      			<if test="isDelete != null">
+        			#{isDelete},
+      			</if>
+    		</trim>
+  	</insert>
+  	
+  	<!-- 更新数据库记录 -->
+  	<update id="update" parameterType="com.xy.wmall.model.Deliver">
+    	update t_deliver
+    	<set>
+			<if test="proxyId != null">
+    			proxy_id = #{proxyId},
+  			</if>
+			<if test="parentProxyId != null">
+    			parent_proxy_id = #{parentProxyId},
+  			</if>
+			<if test="authorizationCode != null">
+    			authorization_code = #{authorizationCode},
+  			</if>
+			<if test="receiveName != null">
+    			receive_name = #{receiveName},
+  			</if>
+			<if test="receivePhone != null">
+    			receive_phone = #{receivePhone},
+  			</if>
+			<if test="receiveAddress != null">
+    			receive_address = #{receiveAddress},
+  			</if>
+			<if test="courierPrice != null">
+    			courier_price = #{courierPrice},
+  			</if>
+			<if test="deliverType != null">
+    			deliver_type = #{deliverType},
+  			</if>
+			<if test="deliverStatus != null">
+    			deliver_status = #{deliverStatus},
+  			</if>
+			<if test="inventoryStatus != null">
+    			inventory_status = #{inventoryStatus},
+  			</if>
+			<if test="remark != null">
+    			remark = #{remark},
+  			</if>
+			<if test="updateUserId != null">
+    			update_user_id = #{updateUserId},
+  			</if>
+			<if test="isDelete != null">
+    			is_delete = #{isDelete},
+  			</if>
+    	</set>
+    	<where>
+    		id = #{id}
+    	</where>
+  	</update>
+  	
+	<!-- 根据map查询 -->
+  	<select id="getDeliver" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select
+        <include refid="Base_Column_List"/>
+        from t_deliver
+        <where>
+  			<if test="id != null">
+    			and id = #{id}
+  			</if>
+  			<if test="proxyId != null">
+    			and proxy_id = #{proxyId}
+  			</if>
+  			<if test="parentProxyId != null">
+    			and parent_proxy_id = #{parentProxyId}
+  			</if>
+  			<if test="authorizationCode != null">
+    			and authorization_code = #{authorizationCode}
+  			</if>
+  			<if test="receiveName != null">
+    			and receive_name = #{receiveName}
+  			</if>
+  			<if test="receivePhone != null">
+    			and receive_phone = #{receivePhone}
+  			</if>
+  			<if test="receiveAddress != null">
+    			and receive_address = #{receiveAddress}
+  			</if>
+  			<if test="courierPrice != null">
+    			and courier_price = #{courierPrice}
+  			</if>
+  			<if test="deliverType != null">
+    			and deliver_type = #{deliverType}
+  			</if>
+  			<if test="deliverStatus != null">
+    			and deliver_status = #{deliverStatus}
+  			</if>
+  			<if test="inventoryStatus != null">
+    			and inventory_status = #{inventoryStatus}
+  			</if>
+  			<if test="remark != null">
+    			and remark = #{remark}
+  			</if>
+  			<if test="createUserId != null">
+    			and create_user_id = #{createUserId}
+  			</if>
+  			<if test="createTime != null">
+    			and create_time = #{createTime}
+  			</if>
+  			<if test="updateUserId != null">
+    			and update_user_id = #{updateUserId}
+  			</if>
+  			<if test="updateTime != null">
+    			and update_time = #{updateTime}
+  			</if>
+  			<if test="isDelete != null">
+    			and is_delete = #{isDelete}
+  			</if>
+        </where>
+  	</select>
+  
+  	<!-- 根据map查询-->
+  	<select id="listDeliver" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select 
+  			t1.*, t3.wechat_name
+        from 
+        	t_deliver t1, t_deliver_detail t2, t_proxy t3
+        <where>
+        	t1.id = t2.deliver_id
+        	and t1.proxy_id = t3.id
+        	<if test="id != null">
+    			and t1.id = #{id}
+  			</if>
+        	<if test="wechatName != null">
+    			and t3.wechat_name like CONCAT('%', #{wechatName}, '%')
+  			</if>
+  			<if test="proxyId != null">
+    			and t1.proxy_id = #{proxyId}
+  			</if>
+  			<if test="parentProxyId != null">
+    			and t1.parent_proxy_id = #{parentProxyId}
+  			</if>
+  			<if test="authorizationCode != null">
+    			and t1.authorization_code = #{authorizationCode}
+  			</if>
+  			<if test="receiveName != null">
+    			and t1.receive_name like CONCAT('%', #{receiveName}, '%')
+  			</if>
+  			<if test="receivePhone != null">
+    			and t1.receive_phone = #{receivePhone}
+  			</if>
+  			<if test="receiveAddress != null">
+    			and t1.receive_address = #{receiveAddress}
+  			</if>
+  			<if test="courierPrice != null">
+    			and t1.courier_price = #{courierPrice}
+  			</if>
+  			<if test="deliverType != null">
+    			and t1.deliver_type = #{deliverType}
+  			</if>
+  			<if test="deliverTypes != null">
+    			and t1.deliver_type in
+				<foreach collection="deliverTypes" item="deliverType" open="(" separator="," close=")">
+					#{deliverType}
+				</foreach>
+  			</if>
+  			<if test="deliverStatus != null">
+    			and t1.deliver_status = #{deliverStatus}
+  			</if>
+  			<if test="inventoryStatus != null">
+    			and t1.inventory_status = #{inventoryStatus}
+  			</if>
+  			<if test="createUserId != null">
+    			and t1.create_user_id = #{createUserId}
+  			</if>
+  			<if test="createTime != null">
+    			and t1.create_time = #{createTime}
+  			</if>
+  			<if test="updateUserId != null">
+    			and t1.update_user_id = #{updateUserId}
+  			</if>
+  			<if test="updateTime != null">
+    			and t1.update_time = #{updateTime}
+  			</if>
+  			<if test="isDelete != null">
+    			and t1.is_delete = #{isDelete}
+  			</if>
+  			<if test="productId != null">
+    			and t2.product_id = #{productId}
+  			</if>
+  			<if test="startDate != null">
+  			 	<![CDATA[ and t1.create_time >= CONCAT(#{startDate}, ' 00:00:00') ]]>
+  			</if>
+  			<if test="endDate != null">
+  			 	<![CDATA[ and t1.create_time <= CONCAT(#{endDate}, ' 23:59:59') ]]>
+  			</if>
+        </where>
+        <if test="groupBy != null">
+        	group by t1.${groupBy}
+        </if>
+        <if test="orderBy != null">
+        	order by t1.${orderBy}
+        </if>
+  	</select>
+  	
+  	<!-- 查看未发货的发货单 -->
+  	<select id="queryDeliver" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select 
+  			t1.*, t2.wechat_name
+        from 
+        	t_deliver t1, t_proxy t2
+        <where>
+        	t1.proxy_id = t2.id
+        	and t1.is_delete = 0
+        	and t1.deliver_status = 0
+        	<if test="id != null">
+    			and t1.id = #{id}
+  			</if>
+  			<if test="ids != null">
+    			and t1.id in
+				<foreach collection="ids" item="id" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+  			</if>
+        </where>
+        order by t1.create_time
+  	</select>
+  	
+  	<!-- 批量保存 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into t_deliver (<include refid="Base_Column_List" />)
+		values 
+		<foreach collection="list" index="index" item="item" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{item.id},
+				#{item.proxyId},
+				#{item.parentProxyId},
+				#{item.authorizationCode},
+				#{item.receiveName},
+				#{item.receivePhone},
+				#{item.receiveAddress},
+				#{item.courierPrice},
+				#{item.deliverType},
+				#{item.deliverStatus},
+				#{item.inventoryStatus},
+				#{item.remark},
+				#{item.createUserId},
+				#{item.createTime},
+				#{item.updateUserId},
+				#{item.updateTime},
+				#{item.isDelete},
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 批量更新 -->
+  	<update id="batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" index="index" item="item" separator=";">
+			update t_deliver
+			<set>
+        		<if test="item.proxyId != null">
+        			proxy_id = #{item.proxyId},
+        		</if>
+        		<if test="item.parentProxyId != null">
+        			parent_proxy_id = #{item.parentProxyId},
+        		</if>
+        		<if test="item.authorizationCode != null">
+        			authorization_code = #{item.authorizationCode},
+        		</if>
+        		<if test="item.receiveName != null">
+        			receive_name = #{item.receiveName},
+        		</if>
+        		<if test="item.receivePhone != null">
+        			receive_phone = #{item.receivePhone},
+        		</if>
+        		<if test="item.receiveAddress != null">
+        			receive_address = #{item.receiveAddress},
+        		</if>
+        		<if test="item.courierPrice != null">
+        			courier_price = #{item.courierPrice},
+        		</if>
+        		<if test="item.deliverType != null">
+        			deliver_type = #{item.deliverType},
+        		</if>
+        		<if test="item.deliverStatus != null">
+        			deliver_status = #{item.deliverStatus},
+        		</if>
+        		<if test="item.inventoryStatus != null">
+        			inventory_status = #{item.inventoryStatus},
+        		</if>
+        		<if test="item.remark != null">
+        			remark = #{item.remark},
+        		</if>
+        		<if test="item.updateUserId != null">
+        			update_user_id = #{item.updateUserId},
+        		</if>
+        		<if test="item.isDelete != null">
+        			is_delete = #{item.isDelete},
+        		</if>
+			</set>
+            where id = #{item.id}
+		</foreach>
+	</update>
+	
+	<!-- 发货统计 -->
+  	<select id="deliverStatistics" resultType="com.xy.wmall.pojo.Statistics" parameterType="java.util.Map">
+  		select 
+  			t2.product_id productId, 
+  			sum(t2.amount) deliverNumber
+		from t_deliver t1, t_deliver_detail t2
+        <where>
+        	t1.id = t2.deliver_id
+        	<if test="proxyId != null">
+        		and t1.proxy_id = #{proxyId}
+        	</if>
+        	<if test="parentProxyId != null">
+        		and t1.parent_proxy_id = #{parentProxyId}
+        	</if>
+        	<if test="natureMonth != null">
+        		and t1.create_time like CONCAT('%', #{natureMonth}, '%')
+        	</if>
+        	<if test="deliverType != null">
+        		and t1.deliver_type = #{deliverType}
+        	</if>
+        	<if test="deliverTypes != null">
+    			and t1.deliver_type in
+				<foreach collection="deliverTypes" item="deliverType" open="(" separator="," close=")">
+					#{deliverType}
+				</foreach>
+  			</if>
+        	<if test="deliverStatus != null">
+        		and t1.deliver_status = #{deliverStatus}
+        	</if>
+        	<if test="inventoryStatus != null">
+    			and t1.inventory_status = #{inventoryStatus}
+  			</if>
+			<if test="isDelete != null">
+        		and t1.is_delete = #{isDelete}
+        	</if>
+        	<if test="productId != null">
+        		and t2.product_id = #{productId}
+        	</if>
+        </where>
+        group by t2.product_id
+  	</select>
+  	
+  	<!-- 待发货数量 -->
+  	<select id="countWaitDeliver" resultType="java.lang.Integer" parameterType="java.util.Map">
+  		select 
+  			count(t1.id) 
+  		from 
+        	t_deliver t1, t_proxy t2
+        <where>
+        	t1.proxy_id = t2.id
+        	and t1.is_delete = 0
+        	and t1.deliver_status = 0
+        	<if test="parentProxyId != null">
+        		and t1.parent_proxy_id = #{parentProxyId}
+        	</if>
+  		</where>
+  	</select>
+  	
+  	<!-- 批量对货 -->
+  	<update id="batchInventory" parameterType="java.util.Map">
+  		update t_deliver set inventory_status = 1
+  		<where>
+  			is_delete = 0
+  			and deliver_status = 1 
+  			and inventory_status = 0
+  			and id in
+			<foreach collection="ids" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</where>
+  	</update>
+</mapper>

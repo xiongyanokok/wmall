@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xy.wmall.mapper.OrderMapper">
+	
+  	<resultMap id="BaseResultMap" type="com.xy.wmall.model.Order">
+		<id column="id" property="id" />	
+	    <result column="proxy_id" property="proxyId" />
+	    <result column="parent_proxy_id" property="parentProxyId" />
+	    <result column="order_type" property="orderType" />
+	    <result column="order_price" property="orderPrice" />
+	    <result column="preferential_price" property="preferentialPrice" />
+	    <result column="is_accumulate" property="isAccumulate" />
+	    <result column="nature_month" property="natureMonth" />
+	    <result column="order_status" property="orderStatus" />
+	    <result column="remark" property="remark" />
+	    <result column="create_user_id" property="createUserId" />
+	    <result column="create_time" property="createTime" />
+	    <result column="update_user_id" property="updateUserId" />
+	    <result column="update_time" property="updateTime" />
+	    <result column="is_delete" property="isDelete" />
+	    <result column="wechat_name" property="wechatName" />
+  	</resultMap>
+  	
+  	<!-- 表所有字段 -->
+  	<sql id="Base_Column_List">
+  		id, proxy_id, parent_proxy_id, order_type, order_price, preferential_price, is_accumulate, nature_month, order_status, remark, create_user_id, create_time, update_user_id, update_time, is_delete
+  	</sql>
+  	
+  	<!-- 根据主键查询 -->
+  	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    	<include refid="Base_Column_List" />
+    	from t_order
+		where id = #{id}
+  	</select>
+  	
+  	<!-- 新增数据库记录 -->
+  	<insert id="insert" parameterType="com.xy.wmall.model.Order">
+    	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	    insert into t_order
+    		<trim prefix="(" suffix=")" suffixOverrides=",">
+		      	<if test="id != null">
+		        	id,
+		      	</if>
+		      	<if test="proxyId != null">
+		        	proxy_id,
+		      	</if>
+		      	<if test="parentProxyId != null">
+		        	parent_proxy_id,
+		      	</if>
+		      	<if test="orderType != null">
+		        	order_type,
+		      	</if>
+		      	<if test="orderPrice != null">
+		        	order_price,
+		      	</if>
+		      	<if test="preferentialPrice != null">
+		        	preferential_price,
+		      	</if>
+		      	<if test="isAccumulate != null">
+		        	is_accumulate,
+		      	</if>
+		      	<if test="natureMonth != null">
+		        	nature_month,
+		      	</if>
+		      	<if test="orderStatus != null">
+		        	order_status,
+		      	</if>
+		      	<if test="remark != null">
+		        	remark,
+		      	</if>
+		      	<if test="createUserId != null">
+		        	create_user_id,
+		      	</if>
+		      	<if test="createTime != null">
+		        	create_time,
+		      	</if>
+		      	<if test="updateUserId != null">
+		        	update_user_id,
+		      	</if>
+		      	<if test="updateTime != null">
+		        	update_time,
+		      	</if>
+		      	<if test="isDelete != null">
+		        	is_delete,
+		      	</if>
+    		</trim>
+    	values
+    		<trim prefix="(" suffix=")" suffixOverrides=",">
+      			<if test="id != null">
+        			#{id},
+      			</if>
+      			<if test="proxyId != null">
+        			#{proxyId},
+      			</if>
+      			<if test="parentProxyId != null">
+        			#{parentProxyId},
+      			</if>
+      			<if test="orderType != null">
+        			#{orderType},
+      			</if>
+      			<if test="orderPrice != null">
+        			#{orderPrice},
+      			</if>
+      			<if test="preferentialPrice != null">
+        			#{preferentialPrice},
+      			</if>
+      			<if test="isAccumulate != null">
+        			#{isAccumulate},
+      			</if>
+      			<if test="natureMonth != null">
+        			#{natureMonth},
+      			</if>
+      			<if test="orderStatus != null">
+        			#{orderStatus},
+      			</if>
+      			<if test="remark != null">
+        			#{remark},
+      			</if>
+      			<if test="createUserId != null">
+        			#{createUserId},
+      			</if>
+      			<if test="createTime != null">
+        			#{createTime},
+      			</if>
+      			<if test="updateUserId != null">
+        			#{updateUserId},
+      			</if>
+      			<if test="updateTime != null">
+        			#{updateTime},
+      			</if>
+      			<if test="isDelete != null">
+        			#{isDelete},
+      			</if>
+    		</trim>
+  	</insert>
+  	
+  	<!-- 更新数据库记录 -->
+  	<update id="update" parameterType="com.xy.wmall.model.Order">
+    	update t_order
+    	<set>
+			<if test="proxyId != null">
+    			proxy_id = #{proxyId},
+  			</if>
+			<if test="parentProxyId != null">
+    			parent_proxy_id = #{parentProxyId},
+  			</if>
+			<if test="orderType != null">
+    			order_type = #{orderType},
+  			</if>
+			<if test="orderPrice != null">
+    			order_price = #{orderPrice},
+  			</if>
+			<if test="preferentialPrice != null">
+    			preferential_price = #{preferentialPrice},
+  			</if>
+			<if test="isAccumulate != null">
+    			is_accumulate = #{isAccumulate},
+  			</if>
+			<if test="natureMonth != null">
+    			nature_month = #{natureMonth},
+  			</if>
+			<if test="orderStatus != null">
+    			order_status = #{orderStatus},
+  			</if>
+			<if test="remark != null">
+    			remark = #{remark},
+  			</if>
+			<if test="updateUserId != null">
+    			update_user_id = #{updateUserId},
+  			</if>
+			<if test="isDelete != null">
+    			is_delete = #{isDelete},
+  			</if>
+    	</set>
+    	<where>
+    		id = #{id}
+    	</where>
+  	</update>
+  	
+	<!-- 根据map查询 -->
+  	<select id="getOrder" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select
+        <include refid="Base_Column_List"/>
+        from t_order
+        <where>
+  			<if test="id != null">
+    			and id = #{id}
+  			</if>
+  			<if test="proxyId != null">
+    			and proxy_id = #{proxyId}
+  			</if>
+  			<if test="parentProxyId != null">
+    			and parent_proxy_id = #{parentProxyId}
+  			</if>
+  			<if test="orderType != null">
+    			and order_type = #{orderType}
+  			</if>
+  			<if test="orderPrice != null">
+    			and order_price = #{orderPrice}
+  			</if>
+  			<if test="preferentialPrice != null">
+    			and preferential_price = #{preferentialPrice}
+  			</if>
+  			<if test="isAccumulate != null">
+    			and is_accumulate = #{isAccumulate}
+  			</if>
+  			<if test="natureMonth != null">
+    			and nature_month = #{natureMonth}
+  			</if>
+  			<if test="orderStatus != null">
+    			and order_status = #{orderStatus}
+  			</if>
+  			<if test="remark != null">
+    			and remark = #{remark}
+  			</if>
+  			<if test="createUserId != null">
+    			and create_user_id = #{createUserId}
+  			</if>
+  			<if test="createTime != null">
+    			and create_time = #{createTime}
+  			</if>
+  			<if test="updateUserId != null">
+    			and update_user_id = #{updateUserId}
+  			</if>
+  			<if test="updateTime != null">
+    			and update_time = #{updateTime}
+  			</if>
+  			<if test="isDelete != null">
+    			and is_delete = #{isDelete}
+  			</if>
+        </where>
+  	</select>
+  
+  	<!-- 根据map查询-->
+  	<select id="listOrder" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select
+  			t1.*, t3.wechat_name
+        from 
+        	t_order t1, t_order_detail t2, t_proxy t3 
+        <where>
+        	t1.id = t2.order_id
+        	and t1.proxy_id = t3.id
+        	<if test="wechatName != null">
+    			and t3.wechat_name like CONCAT('%', #{wechatName}, '%')
+  			</if>
+  			<if test="proxyId != null">
+    			and t1.proxy_id = #{proxyId}
+  			</if>
+  			<if test="parentProxyId != null">
+    			and t1.parent_proxy_id = #{parentProxyId}
+  			</if>
+  			<if test="orderType != null">
+    			and t1.order_type = #{orderType}
+  			</if>
+  			<if test="orderPrice != null">
+    			and t1.order_price = #{orderPrice}
+  			</if>
+  			<if test="preferentialPrice != null">
+    			and t1.preferential_price = #{preferentialPrice}
+  			</if>
+  			<if test="isAccumulate != null">
+    			and t1.is_accumulate = #{isAccumulate}
+  			</if>
+  			<if test="natureMonth != null">
+    			and t1.nature_month like CONCAT('%', #{natureMonth}, '%')
+  			</if>
+  			<if test="orderStatus != null">
+    			and t1.order_status = #{orderStatus}
+  			</if>
+  			<if test="createUserId != null">
+    			and t1.create_user_id = #{createUserId}
+  			</if>
+  			<if test="createTime != null">
+    			and t1.create_time = #{createTime}
+  			</if>
+  			<if test="updateUserId != null">
+    			and t1.update_user_id = #{updateUserId}
+  			</if>
+  			<if test="updateTime != null">
+    			and t1.update_time = #{updateTime}
+  			</if>
+  			<if test="isDelete != null">
+    			and t1.is_delete = #{isDelete}
+  			</if>
+  			<if test="productId != null">
+    			and t2.product_id = #{productId}
+  			</if>
+        </where>
+        <if test="groupBy != null">
+        	group by t1.${groupBy}
+        </if>
+        <if test="orderBy != null">
+        	order by t1.${orderBy}
+        </if>
+  	</select>
+  	
+  	<!-- 批量保存 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into t_order (<include refid="Base_Column_List"/>)
+		values 
+		<foreach collection="list" index="index" item="item" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{item.id},
+				#{item.proxyId},
+				#{item.parentProxyId},
+				#{item.orderType},
+				#{item.orderPrice},
+				#{item.preferentialPrice},
+				#{item.isAccumulate},
+				#{item.natureMonth},
+				#{item.orderStatus},
+				#{item.remark},
+				#{item.createUserId},
+				#{item.createTime},
+				#{item.updateUserId},
+				#{item.updateTime},
+				#{item.isDelete},
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 批量更新 -->
+  	<update id="batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" index="index" item="item" separator=";">
+			update t_order
+			<set>
+        		<if test="item.proxyId != null">
+        			proxy_id = #{item.proxyId},
+        		</if>
+        		<if test="item.parentProxyId != null">
+        			parent_proxy_id = #{item.parentProxyId},
+        		</if>
+        		<if test="item.orderType != null">
+        			order_type = #{item.orderType},
+        		</if>
+        		<if test="item.orderPrice != null">
+        			order_price = #{item.orderPrice},
+        		</if>
+        		<if test="item.preferentialPrice != null">
+        			preferential_price = #{item.preferentialPrice},
+        		</if>
+        		<if test="item.isAccumulate != null">
+        			is_accumulate = #{item.isAccumulate},
+        		</if>
+        		<if test="item.natureMonth != null">
+        			nature_month = #{item.natureMonth},
+        		</if>
+        		<if test="item.orderStatus != null">
+        			order_status = #{item.orderStatus},
+        		</if>
+        		<if test="item.remark != null">
+        			remark = #{item.remark},
+        		</if>
+        		<if test="item.updateUserId != null">
+        			update_user_id = #{item.updateUserId},
+        		</if>
+        		<if test="item.isDelete != null">
+        			is_delete = #{item.isDelete},
+        		</if>
+			</set>
+            where id = #{item.id}
+		</foreach>
+	</update>
+	
+	<!-- 订单统计 -->
+  	<select id="orderStatistics" resultType="com.xy.wmall.pojo.Statistics" parameterType="java.util.Map">
+  		select 
+  			t2.product_id productId, 
+  			<if test="isAccumulate != null">
+        		sum(t2.amount) orderNumber,
+        	</if>
+        	<if test="isAccumulate == null">
+	  			sum(t2.amount + t2.give) orderNumber, 
+        	</if>
+  			(sum(t2.total_price) - t1.preferential_price) orderPrice
+		from t_order t1, t_order_detail t2
+        <where>
+        	t1.id = t2.order_id
+        	and t1.order_status = 4
+        	<if test="isDelete != null">
+        		and t1.is_delete = #{isDelete}
+        	</if>
+        	<if test="proxyId != null">
+        		and t1.proxy_id = #{proxyId}
+        	</if>
+        	<if test="parentProxyId != null">
+        		and t1.parent_proxy_id = #{parentProxyId}
+        	</if>
+        	<if test="isAccumulate != null">
+        		and t1.is_accumulate = #{isAccumulate}
+        	</if>
+        	<if test="natureMonth != null">
+        		and t1.nature_month like CONCAT('%', #{natureMonth}, '%')
+        	</if>
+        	<if test="productId != null">
+        		and t2.product_id = #{productId}
+        	</if>
+        </where>
+        group by t2.product_id
+  	</select>
+  	
+  	<!-- 进货统计 -->
+  	<select id="purchaseStatistics" resultType="com.xy.wmall.pojo.Statistics" parameterType="java.util.Map">
+  		select 
+  			t2.product_id productId, 
+  			sum(t2.amount + t2.give) purchaseNumber, 
+  			(sum(t2.total_price) - t1.preferential_price) purchasePrice
+		from t_order t1, t_order_detail t2
+        <where>
+        	t1.id = t2.order_id
+        	and t1.order_status = 4
+        	<if test="isDelete != null">
+        		and t1.is_delete = #{isDelete}
+        	</if>
+        	<if test="proxyId != null">
+        		and t1.proxy_id = #{proxyId}
+        	</if>
+        	<if test="parentProxyId != null">
+        		and t1.parent_proxy_id = #{parentProxyId}
+        	</if>
+        	<if test="natureMonth != null">
+        		and t1.nature_month like CONCAT('%', #{natureMonth}, '%')
+        	</if>
+        </where>
+        group by t2.product_id
+  	</select>
+  	
+</mapper>

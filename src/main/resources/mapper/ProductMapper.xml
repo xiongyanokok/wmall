@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xy.wmall.mapper.ProductMapper">
+	
+  	<resultMap id="BaseResultMap" type="com.xy.wmall.model.Product">
+		<id column="id" property="id" />	
+	    <result column="product_type" property="productType" />
+	    <result column="product_name" property="productName" />
+	    <result column="product_desc" property="productDesc" />
+	    <result column="create_user_id" property="createUserId" />
+	    <result column="create_time" property="createTime" />
+	    <result column="update_user_id" property="updateUserId" />
+	    <result column="update_time" property="updateTime" />
+	    <result column="is_delete" property="isDelete" />
+  	</resultMap>
+  	
+  	<!-- 表所有字段 -->
+  	<sql id="Base_Column_List">
+  		id, product_type, product_name, product_desc, create_user_id, create_time, update_user_id, update_time, is_delete
+  	</sql>
+  	
+  	<!-- 根据主键查询 -->
+  	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    	<include refid="Base_Column_List" />
+    	from t_product
+		where id = #{id}
+  	</select>
+  	
+  	<!-- 新增数据库记录 -->
+  	<insert id="insert" parameterType="com.xy.wmall.model.Product">
+    	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	    insert into t_product
+    		<trim prefix="(" suffix=")" suffixOverrides=",">
+		      	<if test="id != null">
+		        	id,
+		      	</if>
+		      	<if test="productType != null">
+		        	product_type,
+		      	</if>
+		      	<if test="productName != null">
+		        	product_name,
+		      	</if>
+		      	<if test="productDesc != null">
+		        	product_desc,
+		      	</if>
+		      	<if test="createUserId != null">
+		        	create_user_id,
+		      	</if>
+		      	<if test="createTime != null">
+		        	create_time,
+		      	</if>
+		      	<if test="updateUserId != null">
+		        	update_user_id,
+		      	</if>
+		      	<if test="updateTime != null">
+		        	update_time,
+		      	</if>
+		      	<if test="isDelete != null">
+		        	is_delete,
+		      	</if>
+    		</trim>
+    	values
+    		<trim prefix="(" suffix=")" suffixOverrides=",">
+      			<if test="id != null">
+        			#{id},
+      			</if>
+      			<if test="productType != null">
+        			#{productType},
+      			</if>
+      			<if test="productName != null">
+        			#{productName},
+      			</if>
+      			<if test="productDesc != null">
+        			#{productDesc},
+      			</if>
+      			<if test="createUserId != null">
+        			#{createUserId},
+      			</if>
+      			<if test="createTime != null">
+        			#{createTime},
+      			</if>
+      			<if test="updateUserId != null">
+        			#{updateUserId},
+      			</if>
+      			<if test="updateTime != null">
+        			#{updateTime},
+      			</if>
+      			<if test="isDelete != null">
+        			#{isDelete},
+      			</if>
+    		</trim>
+  	</insert>
+  	
+  	<!-- 更新数据库记录 -->
+  	<update id="update" parameterType="com.xy.wmall.model.Product">
+    	update t_product
+    	<set>
+			<if test="productType != null">
+    			product_type = #{productType},
+  			</if>
+			<if test="productName != null">
+    			product_name = #{productName},
+  			</if>
+			<if test="productDesc != null">
+    			product_desc = #{productDesc},
+  			</if>
+			<if test="updateUserId != null">
+    			update_user_id = #{updateUserId},
+  			</if>
+			<if test="isDelete != null">
+    			is_delete = #{isDelete},
+  			</if>
+    	</set>
+    	<where>
+    		id = #{id}
+    	</where>
+  	</update>
+  	
+	<!-- 根据map查询 -->
+  	<select id="getProduct" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select
+        <include refid="Base_Column_List"/>
+        from t_product
+        <where>
+  			<if test="id != null">
+    			and id = #{id}
+  			</if>
+  			<if test="productType != null">
+    			and product_type = #{productType}
+  			</if>
+  			<if test="productName != null">
+    			and product_name = #{productName}
+  			</if>
+  			<if test="productDesc != null">
+    			and product_desc = #{productDesc}
+  			</if>
+  			<if test="createUserId != null">
+    			and create_user_id = #{createUserId}
+  			</if>
+  			<if test="createTime != null">
+    			and create_time = #{createTime}
+  			</if>
+  			<if test="updateUserId != null">
+    			and update_user_id = #{updateUserId}
+  			</if>
+  			<if test="updateTime != null">
+    			and update_time = #{updateTime}
+  			</if>
+  			<if test="isDelete != null">
+    			and is_delete = #{isDelete}
+  			</if>
+        </where>
+  	</select>
+  
+  	<!-- 根据map查询-->
+  	<select id="listProduct" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select
+        <include refid="Base_Column_List"/>
+        from t_product
+        <where>
+  			<if test="productType != null">
+    			and product_type = #{productType}
+  			</if>
+  			<if test="productName != null">
+    			and product_name = #{productName}
+  			</if>
+  			<if test="productDesc != null">
+    			and product_desc = #{productDesc}
+  			</if>
+  			<if test="createUserId != null">
+    			and create_user_id = #{createUserId}
+  			</if>
+  			<if test="createTime != null">
+    			and create_time = #{createTime}
+  			</if>
+  			<if test="updateUserId != null">
+    			and update_user_id = #{updateUserId}
+  			</if>
+  			<if test="updateTime != null">
+    			and update_time = #{updateTime}
+  			</if>
+  			<if test="isDelete != null">
+    			and is_delete = #{isDelete}
+  			</if>
+        </where>
+        <if test="groupBy != null">
+        	group by ${groupBy}
+        </if>
+        <if test="orderBy != null">
+        	order by ${orderBy}
+        </if>
+  	</select>
+  	
+  	<!-- 批量保存 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into t_product (<include refid="Base_Column_List"/>)
+		values 
+		<foreach collection="list" index="index" item="item" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{item.id},
+				#{item.productType},
+				#{item.productName},
+				#{item.productDesc},
+				#{item.createUserId},
+				#{item.createTime},
+				#{item.updateUserId},
+				#{item.updateTime},
+				#{item.isDelete},
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 批量更新 -->
+  	<update id="batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" index="index" item="item" separator=";">
+			update t_product
+			<set>
+        		<if test="item.productType != null">
+        			product_type = #{item.productType},
+        		</if>
+        		<if test="item.productName != null">
+        			product_name = #{item.productName},
+        		</if>
+        		<if test="item.productDesc != null">
+        			product_desc = #{item.productDesc},
+        		</if>
+        		<if test="item.updateUserId != null">
+        			update_user_id = #{item.updateUserId},
+        		</if>
+        		<if test="item.isDelete != null">
+        			is_delete = #{item.isDelete},
+        		</if>
+			</set>
+            where id = #{item.id}
+		</foreach>
+	</update>
+	
+	<!-- 查询产品列表 -->
+  	<select id="selectProduct" resultMap="BaseResultMap">
+  		select id, product_type, product_name from t_product where is_delete = 0 order by create_time desc
+  	</select>
+	
+</mapper>

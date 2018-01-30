@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui/css/H-ui.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/H-ui.admin.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/skin/default/skin.css}" id="skin" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/style.css}" />
+<title>代理详情</title>
+</head>
+<body>
+	<article class="page-container form form-horizontal">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">微信号：</label>
+			<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+				[[${proxy.wechatNumber}]]
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">微信昵称：</label>
+			<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+				[[${proxy.wechatName}]]
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">姓名：</label>
+			<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+				[[${proxy.name}]]
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">性别：</label>
+			<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+				<label th:if="${proxy.sex == true}" th:text="男"></label>
+				<label th:if="${proxy.sex == false}" th:text="女"></label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">手机号：</label>
+			<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+				[[${proxy.phone}]]
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">地址：</label>
+			<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+				[[${proxy.address}]]
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">代理价：</label>
+			<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+				[[${proxy.proxyPrice}]]
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">身份证号：</label>
+			<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+				[[${proxy.idNumber}]]
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">授权码：</label>
+			<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+				[[${proxy.authorizationCode}]]
+			</div>
+		</div>
+		<div class="row cl" th:if="${not #strings.isEmpty(proxy.remark)}">
+			<label class="form-label col-xs-4 col-sm-3">备注：</label>
+			<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+				[[${proxy.remark}]]
+			</div>
+		</div>
+	</article>
+</body>
+</html>

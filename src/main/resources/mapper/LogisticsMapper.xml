@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xy.wmall.mapper.LogisticsMapper">
+	
+  	<resultMap id="BaseResultMap" type="com.xy.wmall.model.Logistics">
+		<id column="id" property="id" />	
+	    <result column="deliver_id" property="deliverId" />
+	    <result column="company_id" property="companyId" />
+	    <result column="number" property="number" />
+	    <result column="price" property="price" />
+	    <result column="cost" property="cost" />
+	    <result column="remark" property="remark" />
+	    <result column="create_user_id" property="createUserId" />
+	    <result column="create_time" property="createTime" />
+	    <result column="update_user_id" property="updateUserId" />
+	    <result column="update_time" property="updateTime" />
+	    <result column="is_delete" property="isDelete" />
+  	</resultMap>
+  	
+  	<!-- 表所有字段 -->
+  	<sql id="Base_Column_List">
+  		id, deliver_id, company_id, number, price, cost, remark, create_user_id, create_time, update_user_id, update_time, is_delete
+  	</sql>
+  	
+  	<!-- 根据主键查询 -->
+  	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    	<include refid="Base_Column_List" />
+    	from t_logistics
+		where id = #{id}
+  	</select>
+  	
+  	<!-- 新增数据库记录 -->
+  	<insert id="insert" parameterType="com.xy.wmall.model.Logistics">
+    	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	    insert into t_logistics
+    		<trim prefix="(" suffix=")" suffixOverrides=",">
+		      	<if test="id != null">
+		        	id,
+		      	</if>
+		      	<if test="deliverId != null">
+		        	deliver_id,
+		      	</if>
+		      	<if test="companyId != null">
+		        	company_id,
+		      	</if>
+		      	<if test="number != null">
+		        	number,
+		      	</if>
+		      	<if test="price != null">
+		        	price,
+		      	</if>
+		      	<if test="cost != null">
+		        	cost,
+		      	</if>
+		      	<if test="remark != null">
+		        	remark,
+		      	</if>
+		      	<if test="createUserId != null">
+		        	create_user_id,
+		      	</if>
+		      	<if test="createTime != null">
+		        	create_time,
+		      	</if>
+		      	<if test="updateUserId != null">
+		        	update_user_id,
+		      	</if>
+		      	<if test="updateTime != null">
+		        	update_time,
+		      	</if>
+		      	<if test="isDelete != null">
+		        	is_delete,
+		      	</if>
+    		</trim>
+    	values
+    		<trim prefix="(" suffix=")" suffixOverrides=",">
+      			<if test="id != null">
+        			#{id},
+      			</if>
+      			<if test="deliverId != null">
+        			#{deliverId},
+      			</if>
+      			<if test="companyId != null">
+        			#{companyId},
+      			</if>
+      			<if test="number != null">
+        			#{number},
+      			</if>
+      			<if test="price != null">
+        			#{price},
+      			</if>
+      			<if test="cost != null">
+        			#{cost},
+      			</if>
+      			<if test="remark != null">
+        			#{remark},
+      			</if>
+      			<if test="createUserId != null">
+        			#{createUserId},
+      			</if>
+      			<if test="createTime != null">
+        			#{createTime},
+      			</if>
+      			<if test="updateUserId != null">
+        			#{updateUserId},
+      			</if>
+      			<if test="updateTime != null">
+        			#{updateTime},
+      			</if>
+      			<if test="isDelete != null">
+        			#{isDelete},
+      			</if>
+    		</trim>
+  	</insert>
+  	
+  	<!-- 更新数据库记录 -->
+  	<update id="update" parameterType="com.xy.wmall.model.Logistics">
+    	update t_logistics
+    	<set>
+			<if test="deliverId != null">
+    			deliver_id = #{deliverId},
+  			</if>
+			<if test="companyId != null">
+    			company_id = #{companyId},
+  			</if>
+			<if test="number != null">
+    			number = #{number},
+  			</if>
+			<if test="price != null">
+    			price = #{price},
+  			</if>
+			<if test="cost != null">
+    			cost = #{cost},
+  			</if>
+			<if test="remark != null">
+    			remark = #{remark},
+  			</if>
+			<if test="updateUserId != null">
+    			update_user_id = #{updateUserId},
+  			</if>
+			<if test="isDelete != null">
+    			is_delete = #{isDelete},
+  			</if>
+    	</set>
+    	<where>
+    		id = #{id}
+    	</where>
+  	</update>
+  	
+	<!-- 根据map查询 -->
+  	<select id="getLogistics" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select
+        <include refid="Base_Column_List"/>
+        from t_logistics
+        <where>
+  			<if test="id != null">
+    			and id = #{id}
+  			</if>
+  			<if test="deliverId != null">
+    			and deliver_id = #{deliverId}
+  			</if>
+  			<if test="companyId != null">
+    			and company_id = #{companyId}
+  			</if>
+  			<if test="number != null">
+    			and number = #{number}
+  			</if>
+  			<if test="price != null">
+    			and price = #{price}
+  			</if>
+  			<if test="cost != null">
+    			and cost = #{cost}
+  			</if>
+  			<if test="remark != null">
+    			and remark = #{remark}
+  			</if>
+  			<if test="createUserId != null">
+    			and create_user_id = #{createUserId}
+  			</if>
+  			<if test="createTime != null">
+    			and create_time = #{createTime}
+  			</if>
+  			<if test="updateUserId != null">
+    			and update_user_id = #{updateUserId}
+  			</if>
+  			<if test="updateTime != null">
+    			and update_time = #{updateTime}
+  			</if>
+  			<if test="isDelete != null">
+    			and is_delete = #{isDelete}
+  			</if>
+        </where>
+  	</select>
+  
+  	<!-- 根据map查询 -->
+  	<select id="listLogistics" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select
+        <include refid="Base_Column_List"/>
+        from t_logistics
+        <where>
+  			<if test="deliverId != null">
+    			and deliver_id = #{deliverId}
+  			</if>
+  			<if test="deliverIds != null">
+    			and deliver_id in
+				<foreach collection="deliverIds" item="deliverId" open="(" separator="," close=")">
+					#{deliverId}
+				</foreach>
+  			</if>
+  			<if test="companyId != null">
+    			and company_id = #{companyId}
+  			</if>
+  			<if test="number != null">
+    			and number = #{number}
+  			</if>
+  			<if test="price != null">
+    			and price = #{price}
+  			</if>
+  			<if test="cost != null">
+    			and cost = #{cost}
+  			</if>
+  			<if test="remark != null">
+    			and remark = #{remark}
+  			</if>
+  			<if test="createUserId != null">
+    			and create_user_id = #{createUserId}
+  			</if>
+  			<if test="createTime != null">
+    			and create_time = #{createTime}
+  			</if>
+  			<if test="updateUserId != null">
+    			and update_user_id = #{updateUserId}
+  			</if>
+  			<if test="updateTime != null">
+    			and update_time = #{updateTime}
+  			</if>
+  			<if test="isDelete != null">
+    			and is_delete = #{isDelete}
+  			</if>
+        </where>
+        <if test="groupBy != null">
+        	group by ${groupBy}
+        </if>
+        <if test="orderBy != null">
+        	order by ${orderBy}
+        </if>
+  	</select>
+  	
+  	<!-- 批量保存 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into t_logistics (<include refid="Base_Column_List" />)
+		values 
+		<foreach collection="list" index="index" item="item" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{item.id},
+				#{item.deliverId},
+				#{item.companyId},
+				#{item.number},
+				#{item.price},
+				#{item.cost},
+				#{item.remark},
+				#{item.createUserId},
+				#{item.createTime},
+				#{item.updateUserId},
+				#{item.updateTime},
+				#{item.isDelete},
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 批量更新 -->
+  	<update id="batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" index="index" item="item" separator=";">
+			update t_logistics
+			<set>
+        		<if test="item.deliverId != null">
+        			deliver_id = #{item.deliverId},
+        		</if>
+        		<if test="item.companyId != null">
+        			company_id = #{item.companyId},
+        		</if>
+        		<if test="item.number != null">
+        			number = #{item.number},
+        		</if>
+        		<if test="item.price != null">
+        			price = #{item.price},
+        		</if>
+        		<if test="item.cost != null">
+        			cost = #{item.cost},
+        		</if>
+        		<if test="item.remark != null">
+        			remark = #{item.remark},
+        		</if>
+        		<if test="item.updateUserId != null">
+        			update_user_id = #{item.updateUserId},
+        		</if>
+        		<if test="item.isDelete != null">
+        			is_delete = #{item.isDelete},
+        		</if>
+			</set>
+            where id = #{item.id}
+		</foreach>
+	</update>
+	
+</mapper>

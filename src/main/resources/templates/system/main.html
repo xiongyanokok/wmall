@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui/css/H-ui.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/H-ui.admin.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/skin/default/skin.css}" id="skin" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/style.css}" />
+<title>缇丽莎尔微商管理系统</title>
+</head>
+<body>
+<header class="navbar-wrapper">
+	<div class="navbar navbar-fixed-top">
+		<div class="container-fluid cl"> 
+			<a class="logo navbar-logo mr-10 hidden-xs" href="/main"><span class="f-20">缇丽莎尔微商管理系统</span></a> 
+			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
+				<ul class="cl">
+					<li style="padding-right: 5px;" th:title="${week}">[[${time}]]</li>
+					<li class="dropDown right dropDown_hover">
+						<a href="javascript:;" class="dropDown_A">[[${name }]]</a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li><a href="javascript:;" onClick="info()">个人信息</a></li>
+							<li><a href="javascript:;" onclick="pwd()">修改密码</a></li>
+							<li><a href="javascript:;" onclick="logout()">退出</a></li>
+						</ul>
+					</li>
+					<li id="Hui-skin" class="dropDown right dropDown_hover"> 
+						<a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li><a href="javascript:;" data-val="default" title="默认（蓝色）">默认（蓝色）</a></li>
+							<li><a href="javascript:;" data-val="green" title="绿色">绿色</a></li>
+							<li><a href="javascript:;" data-val="red" title="红色">红色</a></li>
+							<li><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></li>
+							<li><a href="javascript:;" data-val="orange" title="橙色">橙色</a></li>
+							<li><a href="javascript:;" data-val="black" title="黑色">黑色</a></li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</header>
+<aside class="Hui-aside">
+	<span style="padding-left: 15px; font-size: 15px;"><i class="Hui-iconfont">&#xe72b;</i> 系统菜单</span>
+	<hr/>
+	<div class="menu_dropdown bk_2">
+		<dl>
+			<dt><i class="Hui-iconfont">&#xe620;</i> 产品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/admin/product/list" data-title="产品列表" href="javascript:;">产品列表</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt><i class="Hui-iconfont">&#xe62b;</i> 代理管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/admin/proxy/list" data-title="代理列表" href="javascript:;">代理列表</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt><i class="Hui-iconfont">&#xe627;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/admin/order/list" data-title="订单列表" href="javascript:;">订单列表</a></li>
+					<li><a data-href="/admin/purchase/list" data-title="我的补货单" href="javascript:;">自己补货</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt><i class="Hui-iconfont">&#xe634;</i> 发货管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/admin/deliver/self_list" data-title="自己发货" href="javascript:;">自己发货</a></li>
+					<li><a data-href="/admin/deliver/super_list" data-title="老大发货" href="javascript:;">老大发货</a></li>
+					<li><a data-href="/admin/deliver/factory_list" data-title="工厂发货" href="javascript:;">工厂发货</a></li>
+					<li><a data-href="/admin/deliver/list" data-title="发货列表" href="javascript:;">发货列表</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt><i class="Hui-iconfont">&#xe62d;</i> 我的管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/admin/inventory/list" data-title="我的对货单" href="javascript:;">我的对货</a></li>
+					<li><a data-href="/admin/wallet/list" data-title="我的钱包" href="javascript:;">我的钱包</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt><i class="Hui-iconfont">&#xe61e;</i> 统计管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/admin/statistics/list" data-title="产品统计" href="javascript:;">产品统计</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt><i class="Hui-iconfont">&#xe669;</i> 物流管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/admin/logisticscompany/list" data-title="物流列表" href="javascript:;">物流列表</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt><i class="Hui-iconfont">&#xe702;</i> 备忘录管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/admin/memo/list" data-title="备忘录列表" href="javascript:;">备忘录列表</a></li>
+				</ul>
+			</dd>
+		</dl>
+	</div>
+</aside>
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:;;" onClick="displaynavbar(this)"></a></div>
+<section class="Hui-article-box">
+	<div id="Hui-tabNav" class="Hui-tabNav hidden-xs">
+		<div class="Hui-tabNav-wp">
+			<ul id="min_title_list" class="acrossTab cl">
+				<li class="active"><span>我的桌面</span><em></em></li>
+			</ul>
+		</div>
+	</div>
+	<div id="iframe_box" class="Hui-article">
+		<div class="show_iframe">
+			<div class="loading"></div>
+			<iframe scrolling="yes" frameborder="0" src="/admin/home/index"></iframe>
+		</div>
+	</div>
+</section>
+
+<div class="contextMenu" id="Huiadminmenu">
+	<ul>
+		<li id="closethis"><i class="Hui-iconfont c-red">&#xe6a6;</i> 关闭当前</li>
+		<li id="closeall"><i class="Hui-iconfont c-red">&#xe6a6;</i> 关闭全部</li>
+	</ul>
+</div>
+</body>
+</html>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" th:src="@{/lib/jquery/1.9.1/jquery.min.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/layer/2.4/layer.js}"></script>
+<script type="text/javascript" th:src="@{/static/h-ui/js/H-ui.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/h-ui.admin/js/H-ui.admin.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>  
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/lib/jquery.contextmenu/jquery.contextmenu.r2.js}"></script>
+<script th:inline="javascript">
+	$(function() {
+		$("ul li").click(function() {
+			$(this).addClass("current").siblings().removeClass("current");
+		});
+	});
+
+	// 个人信息
+	function info() {
+		layer_show("个人信息", "/admin/user/info", "", "520");
+	}
+
+	// 修改密码
+	function pwd() {
+		layer_show("修改密码", "/admin/user/pwd", "", "350");
+	}
+
+	// 退出
+	function logout() {
+		layer.confirm("确定要退出吗？", function(index) {
+			window.location.href = "/logout";
+		});
+	}
+</script>

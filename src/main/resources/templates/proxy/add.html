@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui/css/H-ui.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/H-ui.admin.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/skin/default/skin.css}" id="skin" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/style.css}" />
+<title>添加代理</title>
+</head>
+<body>
+	<article class="page-container">
+		<div id="tab-proxy" class="HuiTab">
+			<div class="tabBar cl">
+				<span>代理基本信息</span>
+				<span>产品发货信息</span>
+			</div>
+			<div class="tabCon">
+				<form id="old_form" action="/admin/proxy/save" method="post" class="form form-horizontal">
+					<input type="hidden" id="isOldProxy" name="isOldProxy" value="1" />
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 微信号：</label>
+						<div class="formControls col-xs-8 col-sm-3">
+							<input type="text" class="input-text" id="wechatNumber" name="wechatNumber" placeholder="微信号" maxlength="20" />
+						</div>
+						<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 微信昵称：</label>
+						<div class="formControls col-xs-8 col-sm-3">
+							<input type="text" class="input-text" id="wechatName" name="wechatName" placeholder="微信昵称" maxlength="20" />
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 姓名：</label>
+						<div class="formControls col-xs-8 col-sm-3">
+							<input type="text" class="input-text" id="name" name="name" placeholder="姓名" maxlength="10" />
+						</div>
+						<label class="form-label col-xs-4 col-sm-2">性别：</label>
+						<div class="formControls col-xs-8 col-sm-3 skin-minimal">
+							<div class="radio-box">
+								<input type="radio" name="sex" value="0" checked /><label>女</label>
+							</div>
+							<div class="radio-box">
+								<input type="radio" name="sex" value="1" /><label>男</label>
+							</div>
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 手机号：</label>
+						<div class="formControls col-xs-8 col-sm-8">
+							<input type="text" class="input-text" id="phone" name="phone" placeholder="手机号" maxlength="11" onkeyup="pureNumber(this)" onafterpaste="pureNumber(this)" />
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 地址：</label>
+						<div class="formControls col-xs-8 col-sm-8">
+							<input type="text" class="input-text" id="address" name="address" placeholder="地址" maxlength="150" />
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2">身份证号：</label>
+						<div class="formControls col-xs-8 col-sm-8">
+							<input type="text" class="input-text" id="idNumber" name="idNumber" placeholder="身份证号" maxlength="18" />
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2">授权码：</label>
+						<div class="formControls col-xs-8 col-sm-8">
+							<input type="text" class="input-text" id="authorizationCode" name="authorizationCode" placeholder="授权码" maxlength="20" />
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2">备注：</label>
+						<div class="formControls col-xs-8 col-sm-8">
+							<textarea class="textarea" id="remark" name="remark" placeholder="备注" maxlength="200"></textarea>
+							<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+						</div>
+					</div>
+					<div class="row cl">
+						<div class="col-xs-8 col-sm-8 col-xs-offset-4 col-sm-offset-2">
+							<button id="old" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 老代理 </button>
+							<button class="btn btn-default radius" type="reset"><i class="Hui-iconfont">&#xe66b;</i> 重置 </button>
+							<button id="new" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe67a;</i> 新代理 </button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="tabCon">
+				<form id="new_form" action="/admin/proxy/save" method="post" class="form form-horizontal">
+					<div class="row cl" id="proxyProductDetail">
+						<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 产品：</label>
+						<div class="formControls col-xs-8 col-sm-8">
+							<table class="table table-border table-bordered table-bg" id="orderDetail">
+								<tr class="text-c">
+									<th>产品</th>
+									<th>数量</th>
+									<th>单价</th>
+									<th>总价</th>
+									<th>操作</th>
+								</tr>
+								<tr class="text-c">
+									<td id="select" style="width: 25%;">
+										<span class="select-box">
+											<select id="productId_0" name="productId" class="select" onchange="computePrice(0)">
+												<option value="">全部产品</option>
+												<option th:each="product : ${products}" th:if="${product.productType == 1}" th:value="${product.id }" th:text="${product.productName }"></option>
+											</select>
+										</span>
+									</td>
+									<td><input type="text" class="input-text" id="amount_0" name="amount" maxlength="8" onblur="computePrice(0)" onkeyup="pureNumber(this)" onafterpaste="pureNumber(this)"/></td>
+									<td><input type="text" class="input-text" id="unitPrice_0" name="unitPrice" maxlength="5" onblur="setUnitPrice(0)" onkeyup="numberPoint(this)" onafterpaste="numberPoint(this)"/></td>
+									<td><input type="text" class="input-text" id="totalPrice_0" name="totalPrice" maxlength="11" onblur="setSumPrice()" onkeyup="pureNumber(this)" onafterpaste="pureNumber(this)"/></td>
+									<td><span class="btn btn-success radius size-MINI" id="addTr">&nbsp;添加&nbsp;</span></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 代理价：</label>
+						<div class="formControls col-xs-8 col-sm-8">
+							<input type="text" class="input-text" id="proxyPrice" name="proxyPrice" placeholder="代理价" maxlength="8" onkeyup="pureNumber(this)" onafterpaste="pureNumber(this)" />
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2">发货类型：</label>
+						<div class="formControls col-xs-8 col-sm-8 deliverType">
+							<div class="radio-box">
+								<input type="radio" name="deliverType" value="1" checked /><label>自己发货</label>
+							</div>
+							<div class="radio-box">
+								<input type="radio" name="deliverType" value="2" /><label>老大发货</label>
+							</div>
+							<div class="radio-box">
+								<input type="radio" name="deliverType" value="0" /><label>不发货</label>
+							</div>
+						</div>
+					</div>
+					<div class="row cl" id="kd">
+						<label class="form-label col-xs-4 col-sm-2">快递费：</label>
+						<div class="formControls col-xs-8 col-sm-8">
+							<input type="text" class="input-text" id="courierPrice" name="courierPrice" placeholder="快递费" maxlength="5" onkeyup="pureNumber(this)" onafterpaste="pureNumber(this)" />
+						</div>
+					</div>
+					<div class="row cl">
+						<div class="col-xs-8 col-sm-8 col-xs-offset-4 col-sm-offset-2">
+							<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存 </button>
+							<button class="btn btn-default radius" type="reset"><i class="Hui-iconfont">&#xe66b;</i> 重置 </button>
+						</div>
+					</div>
+				</form>
+  			</div>
+		</div>
+	</article>
+</body>
+</html>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" th:src="@{/lib/jquery/1.9.1/jquery.min.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/layer/2.4/layer.js}"></script>
+<script type="text/javascript" th:src="@{/static/h-ui/js/H-ui.min.js}"></script> 
+<script type="text/javascript" th:src="@{/static/h-ui.admin/js/H-ui.admin.js}"></script> 
+<script type="text/javascript" th:src="@{/js/common.js}"></script> 
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本--> 
+<script type="text/javascript" th:src="@{/lib/jquery.validation/1.14.0/jquery.validate.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/jquery.validation/1.14.0/validate-methods.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/jquery.validation/1.14.0/messages_zh.js}"></script>
+<script th:inline="javascript">
+	$(function(){
+		$(".skin-minimal input").iCheck({
+			checkboxClass: "icheckbox-blue",
+			radioClass: "iradio-blue",
+			increaseArea: "20%"
+		});
+		$(".deliverType input").iCheck({
+			checkboxClass: "icheckbox-blue",
+			radioClass: "iradio-blue",
+			increaseArea: "20%"
+		});
+		
+		$("#tab-proxy").Huitab({
+			index:0
+		});
+
+		// 发货类型
+		$(".deliverType .iCheck-helper").click(function(){
+			if ($("input[name='deliverType']:checked").val() == 0) {
+				$("#kd").hide();
+			} else {
+				$("#kd").show();
+			}
+		});
+	});
+
+	$(function(){
+		var button;
+		// 老代理只保存代理基本信息
+		$("#old").click(function() {
+			button = "oldButton";
+			$("#old_form").submit();
+		});
+		
+		// 新代理保存代理基本信息+订单信息+发货信息
+		$("#new").click(function() {
+			button = "newButton";
+			$("#old_form").submit();
+		});
+		
+		$("#old_form").validate({
+			rules:{
+				wechatNumber:{
+					required:true
+				},
+				wechatName:{
+					required:true
+				},
+				name:{
+					required:true
+				},
+				phone:{
+					required:true
+				},
+				address:{
+					required:true
+				}
+			},
+			onkeyup:false,
+			focusCleanup:true,
+			success:"valid",
+			submitHandler:function(form){
+				if (button == "oldButton") {
+					$(form).ajaxSubmit(function(result) {
+						if (result.code == "Y") {
+							parent.dataTable.fnDraw();
+							parent.layer.msg("保存成功", {icon:6, time:1000});
+							layer_close();
+						} else {
+							layer.alert(result.message);
+						}
+					});
+				} else {
+					$("#tab-proxy").Huitab({
+						index:1
+					});
+				}
+			}
+		});
+		
+		$("#new_form").validate({
+			rules:{
+				productId:{
+					required:true
+				},
+				amount:{
+					required:true
+				},
+				unitPrice:{
+					required:true
+				},
+				totalPrice:{
+					required:true
+				},
+				proxyPrice:{
+					required:true
+				}
+			},
+			onkeyup:false,
+			focusCleanup:true,
+			success:"valid",
+			submitHandler:function(form){
+				if (button != "newButton") {
+					$("#tab-proxy").Huitab({
+						index:0
+					});
+					button = "newButton";
+					$("#old_form").submit();
+				} else {
+					$("#isOldProxy").val(0);
+					$.ajax({
+						url : "/admin/proxy/save",
+						data : $("form").serialize(),
+						type : 'POST',
+						dataType : 'json',
+						success : function(result) {
+							if (result.code == "Y") {
+								parent.dataTable.fnDraw();
+								parent.layer.msg("保存成功", {icon:6, time:1000});
+								layer_close();
+							} else {
+								layer.alert(result.message);
+							}
+						}
+					});
+				}
+			}
+		});
+	});
+	
+	// 添加删除产品
+	var length = 1;
+	var select = $("#select").html();
+	$("#addTr").click(function(){
+		$("#orderDetail").append("<tr class=\"text-c\"><td>"+select.replace("productId_0","productId_"+length).replace("computePrice(0)","computePrice("+length+")")+"</td><td><input type=\"text\" class=\"input-text\" id=\"amount_"+length+"\" name=\"amount\" maxlength=\"8\" onblur=\"computePrice("+length+")\" onkeyup=\"pureNumber(this)\" onafterpaste=\"pureNumber(this)\"/></td><td><input type=\"text\" class=\"input-text\" id=\"unitPrice_"+length+"\" name=\"unitPrice\" maxlength=\"5\" onblur=\"setUnitPrice("+length+")\" onkeyup=\"numberPoint(this)\" onafterpaste=\"numberPoint(this)\"/></td><td><input type=\"text\" class=\"input-text\" id=\"totalPrice_"+length+"\" name=\"totalPrice\" maxlength=\"11\" onblur=\"setSumPrice()\" onkeyup=\"pureNumber(this)\" onafterpaste=\"pureNumber(this)\"/></td><td><span class=\"btn btn-danger radius size-MINI\" onclick=\"del(this)\">&nbsp;删除&nbsp;</span></td></tr>");
+		length++;
+	});
+	
+	// 删除
+	function del(obj) {
+		$(obj).parent().parent().remove();
+		setSumPrice();
+	}
+	
+	// 计算价格
+	function computePrice(index) {
+		var productId = $("#productId_"+index).val();
+		var amount = $("#amount_"+index).val();
+		$("#unitPrice_"+index).val("");
+		$("#totalPrice_"+index).val("");
+		if (productId && amount) {
+			$.ajax({
+				url : "/admin/order/computePrice",
+				data : {"productId":productId, "amount":amount},
+				type : 'GET',
+				cache : false,
+				dataType : 'json',
+				success : function(result) {
+					if (result.code == "Y") {
+						$("#unitPrice_"+index).val(result.message.unitPrice);
+						$("#totalPrice_"+index).val(result.message.totalPrice);
+						setSumPrice();
+					} else {
+						layer.alert(result.message);
+					}
+				}
+			});
+		}
+	}
+	
+	// 单价
+	function setUnitPrice(index) {
+		var unitPrice = $("#unitPrice_"+index).val();
+		var amount = $("#amount_"+index).val();
+		if (unitPrice && amount) {
+			var totalPrice = parseFloat(unitPrice) * amount;
+			$("#totalPrice_"+index).val(totalPrice);
+			setSumPrice();
+		}
+	}
+	
+	// 总价
+	function setSumPrice() {
+		// 订单价格
+		var prices = $("input[name='totalPrice']");
+		var proxyPrice = 0;
+		for (var i=0; i<prices.length; i++) {
+			if ($(prices[i]).val()) {
+				proxyPrice += parseFloat($(prices[i]).val());
+			}
+		}
+		$("#proxyPrice").val(proxyPrice);
+	}
+</script>

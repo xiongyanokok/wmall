@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xy.wmall.mapper.WalletMapper">
+	
+  	<resultMap id="BaseResultMap" type="com.xy.wmall.model.Wallet">
+		<id column="id" property="id" />	
+	    <result column="proxy_id" property="proxyId" />
+	    <result column="order_id" property="orderId" />
+	    <result column="price" property="price" />
+	    <result column="type" property="type" />
+	    <result column="remark" property="remark" />
+	    <result column="create_user_id" property="createUserId" />
+	    <result column="create_time" property="createTime" />
+	    <result column="update_user_id" property="updateUserId" />
+	    <result column="update_time" property="updateTime" />
+	    <result column="is_delete" property="isDelete" />
+  	</resultMap>
+  	
+  	<!-- 表所有字段 -->
+  	<sql id="Base_Column_List">
+  		id, proxy_id, order_id, price, type, remark, create_user_id, create_time, update_user_id, update_time, is_delete
+  	</sql>
+  	
+  	<!-- 根据主键查询 -->
+  	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    	<include refid="Base_Column_List" />
+    	from t_wallet
+		where id = #{id}
+  	</select>
+  	
+  	<!-- 新增数据库记录 -->
+  	<insert id="insert" parameterType="com.xy.wmall.model.Wallet">
+    	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	    insert into t_wallet
+    		<trim prefix="(" suffix=")" suffixOverrides=",">
+		      	<if test="id != null">
+		        	id,
+		      	</if>
+		      	<if test="proxyId != null">
+		        	proxy_id,
+		      	</if>
+		      	<if test="orderId != null">
+		        	order_id,
+		      	</if>
+		      	<if test="price != null">
+		        	price,
+		      	</if>
+		      	<if test="type != null">
+		        	type,
+		      	</if>
+		      	<if test="remark != null">
+		        	remark,
+		      	</if>
+		      	<if test="createUserId != null">
+		        	create_user_id,
+		      	</if>
+		      	<if test="createTime != null">
+		        	create_time,
+		      	</if>
+		      	<if test="updateUserId != null">
+		        	update_user_id,
+		      	</if>
+		      	<if test="updateTime != null">
+		        	update_time,
+		      	</if>
+		      	<if test="isDelete != null">
+		        	is_delete,
+		      	</if>
+    		</trim>
+    	values
+    		<trim prefix="(" suffix=")" suffixOverrides=",">
+      			<if test="id != null">
+        			#{id},
+      			</if>
+      			<if test="proxyId != null">
+        			#{proxyId},
+      			</if>
+      			<if test="orderId != null">
+        			#{orderId},
+      			</if>
+      			<if test="price != null">
+        			#{price},
+      			</if>
+      			<if test="type != null">
+        			#{type},
+      			</if>
+      			<if test="remark != null">
+        			#{remark},
+      			</if>
+      			<if test="createUserId != null">
+        			#{createUserId},
+      			</if>
+      			<if test="createTime != null">
+        			#{createTime},
+      			</if>
+      			<if test="updateUserId != null">
+        			#{updateUserId},
+      			</if>
+      			<if test="updateTime != null">
+        			#{updateTime},
+      			</if>
+      			<if test="isDelete != null">
+        			#{isDelete},
+      			</if>
+    		</trim>
+  	</insert>
+  	
+  	<!-- 更新数据库记录 -->
+  	<update id="update" parameterType="com.xy.wmall.model.Wallet">
+    	update t_wallet
+    	<set>
+			<if test="proxyId != null">
+    			proxy_id = #{proxyId},
+  			</if>
+			<if test="orderId != null">
+    			order_id = #{orderId},
+  			</if>
+			<if test="price != null">
+    			price = #{price},
+  			</if>
+			<if test="type != null">
+    			type = #{type},
+  			</if>
+			<if test="remark != null">
+    			remark = #{remark},
+  			</if>
+			<if test="updateUserId != null">
+    			update_user_id = #{updateUserId},
+  			</if>
+			<if test="isDelete != null">
+    			is_delete = #{isDelete},
+  			</if>
+    	</set>
+    	<where>
+    		id = #{id}
+    	</where>
+  	</update>
+  	
+	<!-- 根据map查询 -->
+  	<select id="getWallet" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select
+        <include refid="Base_Column_List"/>
+        from t_wallet
+        <where>
+  			<if test="id != null">
+    			and id = #{id}
+  			</if>
+  			<if test="proxyId != null">
+    			and proxy_id = #{proxyId}
+  			</if>
+  			<if test="orderId != null">
+    			and order_id = #{orderId}
+  			</if>
+  			<if test="price != null">
+    			and price = #{price}
+  			</if>
+  			<if test="type != null">
+    			and type = #{type}
+  			</if>
+  			<if test="remark != null">
+    			and remark = #{remark}
+  			</if>
+  			<if test="createUserId != null">
+    			and create_user_id = #{createUserId}
+  			</if>
+  			<if test="createTime != null">
+    			and create_time = #{createTime}
+  			</if>
+  			<if test="updateUserId != null">
+    			and update_user_id = #{updateUserId}
+  			</if>
+  			<if test="updateTime != null">
+    			and update_time = #{updateTime}
+  			</if>
+  			<if test="isDelete != null">
+    			and is_delete = #{isDelete}
+  			</if>
+        </where>
+  	</select>
+  
+  	<!-- 根据map查询-->
+  	<select id="listWallet" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select
+        <include refid="Base_Column_List"/>
+        from t_wallet
+        <where>
+  			<if test="proxyId != null">
+    			and proxy_id = #{proxyId}
+  			</if>
+  			<if test="orderId != null">
+    			and order_id = #{orderId}
+  			</if>
+  			<if test="price != null">
+    			and price = #{price}
+  			</if>
+  			<if test="type != null">
+    			and type = #{type}
+  			</if>
+  			<if test="remark != null">
+    			and remark = #{remark}
+  			</if>
+  			<if test="createUserId != null">
+    			and create_user_id = #{createUserId}
+  			</if>
+  			<if test="createTime != null">
+    			and create_time = #{createTime}
+  			</if>
+  			<if test="updateUserId != null">
+    			and update_user_id = #{updateUserId}
+  			</if>
+  			<if test="updateTime != null">
+    			and update_time = #{updateTime}
+  			</if>
+  			<if test="isDelete != null">
+    			and is_delete = #{isDelete}
+  			</if>
+        </where>
+        <if test="groupBy != null">
+        	group by ${groupBy}
+        </if>
+        <if test="orderBy != null">
+        	order by ${orderBy}
+        </if>
+  	</select>
+  	
+  	<!-- 批量保存 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into t_wallet (<include refid="Base_Column_List"/>)
+		values 
+		<foreach collection="list" index="index" item="item" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{item.id},
+				#{item.proxyId},
+				#{item.orderId},
+				#{item.price},
+				#{item.type},
+				#{item.remark},
+				#{item.createUserId},
+				#{item.createTime},
+				#{item.updateUserId},
+				#{item.updateTime},
+				#{item.isDelete},
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 批量更新 -->
+  	<update id="batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" index="index" item="item" separator=";">
+			update t_wallet
+			<set>
+        		<if test="item.proxyId != null">
+        			proxy_id = #{item.proxyId},
+        		</if>
+        		<if test="item.orderId != null">
+        			order_id = #{item.orderId},
+        		</if>
+        		<if test="item.price != null">
+        			price = #{item.price},
+        		</if>
+        		<if test="item.type != null">
+        			type = #{item.type},
+        		</if>
+        		<if test="item.remark != null">
+        			remark = #{item.remark},
+        		</if>
+        		<if test="item.updateUserId != null">
+        			update_user_id = #{item.updateUserId},
+        		</if>
+        		<if test="item.isDelete != null">
+        			is_delete = #{item.isDelete},
+        		</if>
+			</set>
+            where id = #{item.id}
+		</foreach>
+	</update>
+	
+	<!-- 查询代理钱包余额 -->
+	<select id="listWalletBalance" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select proxy_id,
+			sum(CASE WHEN type=1 THEN price ELSE 0 END) - sum(CASE WHEN type=2 THEN price ELSE 0 END) price
+		from t_wallet 
+		<where>
+  			<if test="proxyId != null">
+    			and proxy_id = #{proxyId}
+  			</if>
+  			<if test="proxyIds != null">
+    			and proxy_id in
+				<foreach collection="proxyIds" item="proxyId" open="(" separator="," close=")">
+					#{proxyId}
+				</foreach>
+  			</if>
+  			<if test="isDelete != null">
+    			and is_delete = #{isDelete}
+  			</if>
+        </where>
+        <if test="groupBy != null">
+        	group by ${groupBy}
+        </if>
+	</select>
+	
+	<!-- 统计钱包余额 -->
+	<select id="getStatisticsWallet" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select
+			sum(CASE WHEN type=1 THEN price ELSE 0 END) - sum(CASE WHEN type=2 THEN price ELSE 0 END) price
+		from t_wallet 
+		<where>
+  			<if test="proxyId != null">
+    			<![CDATA[ and proxy_id ${operator} #{proxyId} ]]>
+  			</if>
+  			<if test="isDelete != null">
+    			and is_delete = #{isDelete}
+  			</if>
+        </where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui/css/H-ui.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/H-ui.admin.css}" />
+<style>
+	ul li{list-style: none;}
+	.track-list{margin: 20px; padding-left: 5px; position: relative;}
+	.track-list li{position: relative; padding: 10px 0 10px 25px; line-height: 18px; border-left: 1px solid #d9d9d9; color: #999;}
+	.track-list li.first{color: red; padding-top: 0; border-top-color: #fff;}
+	.track-list li .node-icon{position: absolute; left: -6px; top: 40%; width: 11px; height: 11px; background: url(/images/order-icons.png)  -21px -72px no-repeat;}
+	.track-list li.first .node-icon{background-position:0 -72px; top: 15%;}
+	.track-list li .time{margin-right: 20px; top: 4px;}
+	.track-list li .txt{top: 4px;}
+	.notfind-icon{padding-left: 22px; color:#ff7800; background: url(/images/spider_search_v4.png) 0px -204px no-repeat;}
+</style>
+<title>物流信息</title>
+</head>
+<body>
+	<div style="position: fixed; width: 100%; z-index: 9999">
+		<nav class="breadcrumb">
+			<div style="padding-left: 10px;">
+				物流公司：[[${logisticsCompany.name}]]
+				<span style="padding-right: 3%;"></span>
+				物流单号：[[${logistics.number}]]
+				<span style="padding-right: 3%;"></span>
+				物流价格：[[${logistics.price + logistics.cost}]]
+				<span th:if="${not #strings.isEmpty(logistics.remark)}">
+					<span style="padding-right: 3%;">
+					</span>备注：[[${logistics.remark}]]
+				</span>
+			</div>
+		</nav>
+	</div>
+	<div class="pd-20"></div>
+	<div class="track-list">
+		<apan class="notfind-icon" th:if="${#lists.size(logisticsInfos) == 0}">抱歉，暂无查询记录</apan>
+		<ul th:each="logisticsInfo,status : ${logisticsInfos}">
+			<li th:if="${status.index == 0 }" class="first">
+				<i class="node-icon"></i>
+				<span class="time" th:text="${logisticsInfo.time }"></span>
+				<span class="txt" th:text="${logisticsInfo.context }"></span>
+			</li>
+			<li th:if="${status.index > 1 }">
+				<i class="node-icon"></i>
+				<span class="time" th:text="${logisticsInfo.time }"></span>
+				<span class="txt" th:text="${logisticsInfo.context }"></span>
+			</li>
+		</ul>
+	</div>
+</body>
+</html>

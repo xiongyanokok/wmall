@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui/css/H-ui.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/H-ui.admin.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/skin/default/skin.css}" id="skin" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/style.css}" />
+<title>我的桌面</title>
+</head>
+<body>
+	<div style="position: fixed; width: 100%;">
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>我的桌面 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+	</div>
+	<div class="pd-20" style="padding-top: 60px;">
+		<div class="text-l">
+			产品：
+			<span class="select-box inline" style="width: 15%;">
+				<select id="productId" name="productId" class="select" style="width: 100%;">
+					<option value="">全部产品</option>
+					<option th:each="product : ${products}" th:value="${product.id }" th:text="${product.productName }"></option>
+				</select>
+			</span>
+			数量：
+			<input class="input-text inline" style="width: 15%;" type="text" id="amount" maxlength="8" onkeyup="pureNumber(this)" onafterpaste="pureNumber(this)" />
+			<button class="btn btn-primary radius" type="button" onclick="computePrice()"> 计算 </button>
+			单价：
+			<input class="input-text inline" style="width: 15%;" type="text" readonly="readonly" id="unitPrice"/>
+			总价：
+			<input class="input-text inline" style="width: 15%;" type="text" readonly="readonly" id="totalPrice"/>
+		</div>
+		<div class="cl pd-5 bg-1 bk-gray mt-20">
+    		代理存款余额：<b><span class="c-red" th:text="${proxyWallet}"></span></b>
+    		<span style="padding-left: 20px;"></span>
+    		我的存款余额：<b><span class="c-red" th:text="${myWallet}"></span></b>
+    		<span style="padding-left: 20px;"></span>
+    		待发货数量：<b><span class="c-red" th:text="${waitDeliver}"></span></b>
+  		</div>
+  		<br>
+  		<button class="btn btn-primary radius" type="button" onclick="backup()"> 备份数据 </button>
+	</div>
+</body>
+</html>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" th:src="@{/lib/jquery/1.9.1/jquery.min.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/layer/2.4/layer.js}"></script>
+<script type="text/javascript" th:src="@{/static/h-ui/js/H-ui.min.js}"></script> 
+<script type="text/javascript" th:src="@{/static/h-ui.admin/js/H-ui.admin.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script> 
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/lib/datatables/1.10.0/jquery.dataTables.min.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/laypage/1.2/laypage.js}"></script>
+<script th:inline="javascript">
+	// 计算器
+	function computePrice() {
+		var productId = $("#productId").val();
+		var amount = $("#amount").val();
+		if (productId && amount) {
+			$.ajax({
+				url : "/admin/order/computePrice",
+				data : {"productId":productId, "amount":amount},
+				type : 'GET',
+				cache : false,
+				dataType : 'json',
+				success : function(result) {
+					if (result.code == "Y") {
+						$("#unitPrice").val(result.message.unitPrice);
+						$("#totalPrice").val(result.message.totalPrice);
+					} else {
+						layer.alert(result.message);
+					}
+				}
+			});
+		}
+	}
+	
+	// 备份数据
+	function backup() {
+		$.ajax({
+			url : "/admin/home/backup",
+			type : 'GET',
+			cache : false,
+			dataType : 'json',
+			success : function(result) {
+				layer.alert(result.message);
+			}
+		});
+	}
+</script>

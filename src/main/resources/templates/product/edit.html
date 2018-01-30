@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui/css/H-ui.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/H-ui.admin.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/skin/default/skin.css}" id="skin" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/style.css}" />
+<title>修改产品</title>
+</head>
+<body>
+	<article class="page-container">
+		<form id="form" action="/admin/product/update" method="post" class="form form-horizontal">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">产品类型：</label>
+				<div class="formControls col-xs-8 col-sm-8 skin-minimal">
+					<div class="radio-box">
+						<input type="radio" name="productType" value="1" th:checked="${product.productType == 1}"  /><label>代理产品</label>
+					</div>
+					<div class="radio-box">
+						<input type="radio" name="productType" value="2" th:checked="${product.productType == 2}" /><label>赠品</label>
+					</div>
+				</div>
+			</div>
+			<input type="hidden" id="id" name="id" th:value="${product.id}" />
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span> 产品名称：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<input type="text" class="input-text" placeholder="产品名称" maxlength="20" id="productName" name="productName" th:value="${product.productName}" />
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">产品描述：</label>
+				<div class="formControls col-xs-8 col-sm-8">
+					<textarea class="textarea" placeholder="产品描述" maxlength="200" id="productDesc" name="productDesc" th:text="${product.productDesc}"></textarea>
+					<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+				</div>
+			</div>
+			
+			<div class="row cl">
+				<div class="col-xs-8 col-sm-8 col-xs-offset-4 col-sm-offset-3">
+					<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存 </button>
+					<button class="btn btn-default radius" type="reset"><i class="Hui-iconfont">&#xe66b;</i> 重置 </button>
+				</div>
+			</div>
+		</form>
+	</article>
+</body>
+</html>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" th:src="@{/lib/jquery/1.9.1/jquery.min.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/layer/2.4/layer.js}"></script>
+<script type="text/javascript" th:src="@{/static/h-ui/js/H-ui.min.js}"></script> 
+<script type="text/javascript" th:src="@{/static/h-ui.admin/js/H-ui.admin.js}"></script> 
+<script type="text/javascript" th:src="@{/js/common.js}"></script> 
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本--> 
+<script type="text/javascript" th:src="@{/lib/jquery.validation/1.14.0/jquery.validate.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/jquery.validation/1.14.0/validate-methods.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/jquery.validation/1.14.0/messages_zh.js}"></script>
+<script th:inline="javascript">
+	$(function(){
+		$(".skin-minimal input").iCheck({
+			checkboxClass: "icheckbox-blue",
+			radioClass: "iradio-blue",
+			increaseArea: "20%"
+		});
+	});
+
+	$(function(){
+		$("#form").validate({
+			rules:{
+				productName:{
+					required:true
+				}
+			},
+			onkeyup:false,
+			focusCleanup:true,
+			success:"valid",
+			submitHandler:function(form){
+				$(form).ajaxSubmit(function(result) {
+					if (result.code == "Y") {
+						parent.dataTable.fnDraw();
+						parent.layer.msg("修改成功", {icon:6, time:1000});
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
+					} else {
+						layer.alert(result.message);
+					}
+				});
+			}
+		});
+	});
+</script>
