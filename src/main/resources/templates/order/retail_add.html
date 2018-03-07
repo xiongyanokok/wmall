@@ -173,7 +173,8 @@
 					required : true
 				},
 				receivePhone : {
-					required : true
+					required : true,
+					minlength:11
 				},
 				receiveAddress : {
 					required : true
@@ -201,35 +202,10 @@
 
 	var length = 1;
 	var select = $("#select").html();
-	$("#addTr")
-			.click(
-					function() {
-						$("#orderDetail")
-								.append(
-										"<tr class=\"text-c\"><td>"
-												+ select
-														.replace(
-																"productId_0",
-																"productId_"
-																		+ length)
-														.replace(
-																"computePrice(0)",
-																"computePrice("
-																		+ length
-																		+ ")")
-												+ "</td><td><input type=\"text\" class=\"input-text\" id=\"amount_"
-												+ length
-												+ "\" name=\"amount\" maxlength=\"8\" onblur=\"computePrice("
-												+ length
-												+ ")\" onkeyup=\"pureNumber(this)\" onafterpaste=\"pureNumber(this)\"/></td><td><input type=\"text\" class=\"input-text\" id=\"unitPrice_"
-												+ length
-												+ "\" name=\"unitPrice\" maxlength=\"11\" onblur=\"setUnitPrice("
-												+ length
-												+ ")\" onkeyup=\"numberPoint(this)\" onafterpaste=\"numberPoint(this)\"/></td><td><input type=\"text\" class=\"input-text\" id=\"totalPrice_"
-												+ length
-												+ "\" name=\"totalPrice\" maxlength=\"11\" onblur=\"setOrderPrice()\" onkeyup=\"pureNumber(this)\" onafterpaste=\"pureNumber(this)\"/></td><td><span class=\"btn btn-danger radius size-MINI\" onclick=\"del(this)\">&nbsp;删除&nbsp;</span></td></tr>");
-						length++;
-					});
+	$("#addTr").click(function(){
+		$("#orderDetail").append("<tr class=\"text-c\"><td>"+select.replace("productId_0","productId_"+length).replace("computePrice(0)","computePrice("+length+")")+"</td><td><input type=\"text\" class=\"input-text\" id=\"amount_"+length+"\" name=\"amount\" maxlength=\"8\" onblur=\"computePrice("+length+")\" onkeyup=\"pureNumber(this)\" onafterpaste=\"pureNumber(this)\"/></td><td><input type=\"text\" class=\"input-text\" id=\"unitPrice_"+length+"\" name=\"unitPrice\" maxlength=\"11\" onblur=\"setUnitPrice("+length+")\" onkeyup=\"numberPoint(this)\" onafterpaste=\"numberPoint(this)\"/></td><td><input type=\"text\" class=\"input-text\" id=\"totalPrice_"+length+"\" name=\"totalPrice\" maxlength=\"11\" onblur=\"setOrderPrice()\" onkeyup=\"pureNumber(this)\" onafterpaste=\"pureNumber(this)\"/></td><td><span class=\"btn btn-danger radius size-MINI\" onclick=\"del(this)\">&nbsp;删除&nbsp;</span></td></tr>");
+		length++;
+	});
 
 	function del(obj) {
 		$(obj).parent().parent().remove();
