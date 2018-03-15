@@ -61,4 +61,5 @@ public class Result<T> {
     public static final Result<String> NODATA = new Result<>(10005, "无数据");
     public static final Result<String> NORESOURCE = new Result<>(10006, "资源不存在");
     public static final Result<String> PARAMERROR = new Result<>(10007, "参数格式错误");
+    
 }

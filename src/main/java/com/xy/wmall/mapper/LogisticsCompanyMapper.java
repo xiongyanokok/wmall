@@ -18,4 +18,5 @@ public interface LogisticsCompanyMapper extends BaseMapper<LogisticsCompany> {
      * @return
      */
     List<LogisticsCompany> listLogisticsCompany();
+    
 }

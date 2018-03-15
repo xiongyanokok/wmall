@@ -69,7 +69,7 @@ public class WalletServiceImpl extends BaseServiceImpl<WalletMapper, Wallet> imp
     		Map<String, Object> map = CommonUtils.defaultQueryMap();
     		map.put("proxyId", proxyId);
     		List<Wallet> wallets = walletMapper.listWalletBalance(map);
-    		if (CollectionUtils.isEmpty(wallets) || null == wallets.get(0)) {
+    		if (CollectionUtils.isEmpty(wallets)) {
     			return 0;
     		}
     		return wallets.get(0).getPrice();

@@ -18,7 +18,6 @@
 	    <result column="update_user_id" property="updateUserId" />
 	    <result column="update_time" property="updateTime" />
 	    <result column="is_delete" property="isDelete" />
-	    <result column="wechat_name" property="wechatName" />
   	</resultMap>
   	
   	<!-- 表所有字段 -->
@@ -234,7 +233,7 @@
   	<!-- 根据map查询-->
   	<select id="listByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
   		select
-  			t1.*, t3.wechat_name
+  			t1.*, t3.wechat_name wechatName
         from 
         	t_order t1, t_order_detail t2, t_proxy t3 
         <where>
