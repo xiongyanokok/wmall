@@ -19,7 +19,6 @@ import com.github.pagehelper.PageInfo;
 import com.xy.wmall.common.Constant;
 import com.xy.wmall.common.CustomDateEditor;
 import com.xy.wmall.common.utils.CommonUtils;
-import com.xy.wmall.enums.TrueFalseStatusEnum;
 import com.xy.wmall.pojo.UserInfo;
 
 /**
@@ -126,11 +125,9 @@ public abstract class BaseController {
 		// 设置分页参数
 		PageHelper.offsetPage(Integer.valueOf(offset), Integer.valueOf(limit));
 
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		// 排序
 		map.put("orderBy", CommonUtils.humpToLine(request.getParameter("orderBy")));
-		// 未删除
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
 		// 查询数据库
 		List<T> list = callback.query(map);
 

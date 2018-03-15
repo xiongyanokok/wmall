@@ -3,16 +3,13 @@ package com.xy.wmall.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xy.wmall.common.Assert;
 import com.xy.wmall.common.utils.DateUtils;
-import com.xy.wmall.common.utils.ListPageUtils;
 import com.xy.wmall.enums.DeliverTypeEnum;
 import com.xy.wmall.enums.ErrorCodeEnum;
 import com.xy.wmall.enums.OrderStatusEnum;
@@ -38,7 +35,7 @@ import com.xy.wmall.service.ProxyService;
  * @date 2017年10月28日 上午08:54:21
  */
 @Service
-public class ProxyServiceImpl implements ProxyService {
+public class ProxyServiceImpl extends BaseServiceImpl<ProxyMapper, Proxy> implements ProxyService {
 
     @Autowired
 	private ProxyMapper proxyMapper;
@@ -55,43 +52,6 @@ public class ProxyServiceImpl implements ProxyService {
     @Autowired
     private DeliverDetailMapper deliverDetailMapper;
 	
-	/**
-     * 根据主键查询
-     *
-     * @param id
-     * @return
-     * @throws WmallException
-     */
-    @Override
-    public Proxy selectByPrimaryKey(Integer id) {
-    	Assert.notNull(id, "id为空");
-    	try {
-	    	return proxyMapper.selectByPrimaryKey(id);
-		} catch (Exception e) {
-			throw new WmallException(ErrorCodeEnum.DB_SELECT_ERROR, "【" + id + "】查询失败", e);
-		}
-    }
-    
-    /**
-     * 根据ID查询
-     *
-     * @param id
-     * @return
-     * @throws WmallException
-     */
-    @Override
-    public Proxy getProxyById(Integer id) {
-    	Assert.notNull(id, "id为空");
-    	try {
-    		Map<String, Object> map = new HashMap<>();
-    		map.put("id", id);
-    		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
-	    	return proxyMapper.getProxy(map);
-		} catch (Exception e) {
-			throw new WmallException(ErrorCodeEnum.DB_SELECT_ERROR, "【" + id + "】查询失败", e);
-		}
-    }
-    
 	/**
      * 保存数据
      *
@@ -187,111 +147,4 @@ public class ProxyServiceImpl implements ProxyService {
 		}
     }
 
-    /**
-     * 修改数据
-     *
-     * @param proxy
-     * @throws WmallException
-     */
-    @Override
-    public void update(Proxy proxy) {
-    	Assert.notNull(proxy, "修改数据为空");
-    	try {
-    		proxyMapper.update(proxy);
-		} catch (Exception e) {
-			throw new WmallException(ErrorCodeEnum.DB_UPDATE_ERROR, "【" + proxy.toString() + "】修改失败", e);
-		}
-    }
-    
-    /**
-     * 删除数据
-     * 
-     * @param proxy
-     * @throws WmallException
-     */
-    @Override
-    public void remove(Proxy proxy) {
-    	Assert.notNull(proxy, "删除数据为空");
-		try {
-    		Proxy deleteProxy = new Proxy();
-    		deleteProxy.setId(proxy.getId());
-    		deleteProxy.setIsDelete(TrueFalseStatusEnum.TRUE.getValue());
-    		proxyMapper.update(deleteProxy);
-		} catch (Exception e) {
-			throw new WmallException(ErrorCodeEnum.DB_DELETE_ERROR, "【" + proxy.toString() + "】删除失败", e);
-    	}
-    }
-    
-    /**
-     * 根据map查询
-     * 
-     * @param map
-     * @return
-     * @throws WmallException
-     */
-    @Override
-    public Proxy getProxy(Map<String, Object> map) {
-    	Assert.notEmpty(map, "查询数据为空");
-    	try {
-	    	return proxyMapper.getProxy(map);
-		} catch (Exception e) {
-			throw new WmallException(ErrorCodeEnum.DB_SELECT_ERROR, "【" + map + "】查询对象失败", e);
-		}
-    }
-    
-    /**
-     * 根据map查询
-     * 
-     * @param map
-     * @return
-     * @throws WmallException
-     */
-    @Override
-    public List<Proxy> listProxy(Map<String, Object> map) {
-   	 	Assert.notEmpty(map, "查询数据为空");
-    	try {
-	    	return proxyMapper.listProxy(map);
-		} catch (Exception e) {
-			throw new WmallException(ErrorCodeEnum.DB_SELECT_ERROR, "【" + map + "】查询列表失败", e);
-		}
-    }
-    
-    /**
-     * 批量保存
-     * 
-     * @param list
-     * @throws WmallException
-     */
-    @Override
-    public void batchSave(List<Proxy> list) {
-    	Assert.notEmpty(list, "批量保存数据为空");
-    	try {
-			List<List<Proxy>> pageList = ListPageUtils.listPage(list, 1000);
-			for (List<Proxy> page : pageList) {
-				proxyMapper.batchInsert(page);
-			}
-		} catch (Exception e) {
-			throw new WmallException(ErrorCodeEnum.DB_BATCH_ERROR, "批量保存失败", e);
-		}
-    }
-    
-    /**
-     * 批量更新
-     * 
-     * @param list
-     * @throws WmallException
-     */
-    @Override
-    public void batchUpdate(List<Proxy> list) {
-    	Assert.notEmpty(list, "批量修改数据为空");
-    	try {
-			List<List<Proxy>> pageList = ListPageUtils.listPage(list, 1000);
-			for (List<Proxy> page : pageList) {
-				proxyMapper.batchUpdate(page);
-			}
-		} catch (Exception e) {
-			throw new WmallException(ErrorCodeEnum.DB_BATCH_ERROR, "批量修改失败", e);
-		}
-    }
-    
 }

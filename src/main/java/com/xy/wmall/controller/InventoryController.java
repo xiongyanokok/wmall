@@ -11,8 +11,6 @@ import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xy.wmall.common.Assert;
 import com.xy.wmall.common.utils.BeanUtils;
+import com.xy.wmall.common.utils.CommonUtils;
 import com.xy.wmall.common.utils.JacksonUtils;
 import com.xy.wmall.enums.DeliverTypeEnum;
 import com.xy.wmall.enums.ProductTypeEnum;
@@ -37,6 +36,8 @@ import com.xy.wmall.service.ProductService;
 import com.xy.wmall.service.ProxyService;
 import com.xy.wmall.service.WalletService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Controller
  * 
@@ -45,12 +46,8 @@ import com.xy.wmall.service.WalletService;
  */
 @Controller
 @RequestMapping(value = "/admin/inventory", produces = { "application/json; charset=UTF-8" })
+@Slf4j
 public class InventoryController extends BaseController {
-
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(InventoryController.class);
 
     @Autowired
 	private InventoryService inventoryService;
@@ -83,7 +80,7 @@ public class InventoryController extends BaseController {
 			model.addAttribute("proxyId", proxyId);
 		}
 		Assert.notNull(proxyId, "proxyId为空");
-		Proxy proxy = proxyService.getProxyById(proxyId);
+		Proxy proxy = proxyService.getById(proxyId);
 		Assert.notNull(proxy, "代理不存在");
 		model.addAttribute("proxy", proxy);
 		List<Product> products = productService.listProduct();
@@ -109,7 +106,7 @@ public class InventoryController extends BaseController {
 			map.put("startDate", request.getParameter("startDate"));
 			// 对货结束时间
 			map.put("endDate", request.getParameter("endDate")); 
-			return inventoryService.listInventory(map);
+			return inventoryService.listByMap(map);
 		});
 	}
 	
@@ -123,8 +120,7 @@ public class InventoryController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> proxySave(Integer proxyId) {
 		Assert.notNull(proxyId, "proxyId为空");
-		Map<String, Object> map = new HashMap<>();
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		map.put("proxyId", proxyId);
 		// 订单统计
 		List<Statistics> orderStatistics = orderService.orderStatistics(map);
@@ -174,7 +170,7 @@ public class InventoryController extends BaseController {
 		inventory.setUpdateTime(new Date());
 		inventory.setIsDelete(TrueFalseStatusEnum.FALSE.getValue());
 		inventoryService.save(inventory);
-		logger.info("【{}】代理对货成功", inventory);
+		log.info("【{}】代理对货成功", inventory);
 		return buildSuccess("保存成功");
 	}
 	
@@ -187,8 +183,7 @@ public class InventoryController extends BaseController {
 	@RequestMapping(value = "/super_save", method = { RequestMethod.POST })
 	@ResponseBody
 	public Map<String, Object> superSave() {
-		Map<String, Object> map = new HashMap<>();
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		// 进货统计
 		map.put("parentProxyId", getParentProxyId());
 		List<Statistics> purchaseStatistics = orderService.purchaseStatistics(map);
@@ -240,7 +235,7 @@ public class InventoryController extends BaseController {
 		inventory.setUpdateTime(new Date());
 		inventory.setIsDelete(TrueFalseStatusEnum.FALSE.getValue());
 		inventoryService.save(inventory);
-		logger.info("【{}】老大对货成功", inventory);
+		log.info("【{}】老大对货成功", inventory);
 		return buildSuccess("保存成功");
 	}
 	
@@ -254,7 +249,7 @@ public class InventoryController extends BaseController {
 	@RequestMapping(value = "/edit", method = { RequestMethod.GET })
 	public String edit(Model model, Integer id) {
 		Assert.notNull(id, "id为空");
-		Inventory inventory = inventoryService.getInventoryById(id);
+		Inventory inventory = inventoryService.getById(id);
 		Assert.notNull(inventory, "数据不存在");
 		model.addAttribute("inventory", inventory);
 		return "inventory/edit";
@@ -270,12 +265,12 @@ public class InventoryController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> update(Inventory inventory) {
 		Assert.notNull(inventory, "修改数据为空");
-		Inventory inventoryInfo = inventoryService.getInventoryById(inventory.getId());
+		Inventory inventoryInfo = inventoryService.getById(inventory.getId());
 		Assert.notNull(inventoryInfo, "数据不存在");
 		inventory.setUpdateUserId(getUserId());
 		inventory.setUpdateTime(new Date());
 		inventoryService.update(inventory);
-		logger.info("【{}】修改成功", inventory);
+		log.info("【{}】修改成功", inventory);
 		return buildSuccess("修改成功");
 	}
 	
@@ -289,10 +284,10 @@ public class InventoryController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> delete(Integer id) {
 		Assert.notNull(id, "id为空");
-		Inventory inventory = inventoryService.getInventoryById(id);
+		Inventory inventory = inventoryService.getById(id);
 		Assert.notNull(inventory, "数据不存在");
 		inventoryService.remove(inventory);
-		logger.info("【{}】删除成功", inventory);
+		log.info("【{}】删除成功", inventory);
 		return buildSuccess("删除成功");
 	}
 	
@@ -306,7 +301,7 @@ public class InventoryController extends BaseController {
 	@RequestMapping(value = "/detail", method = { RequestMethod.GET })
 	public String detail(Model model, Integer id) {
 		Assert.notNull(id, "id为空");
-		Inventory inventory = inventoryService.getInventoryById(id);
+		Inventory inventory = inventoryService.getById(id);
 		Assert.notNull(inventory, "数据不存在");
 		model.addAttribute("remark", inventory.getRemark());
 		List<Statistics> statisticsList = new ArrayList<>();
@@ -355,8 +350,7 @@ public class InventoryController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> proxyBill(Integer proxyId) {
 		Assert.notNull(proxyId, "proxyId为空");
-		Map<String, Object> map = new HashMap<>();
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		map.put("proxyId", proxyId);
 		// 订单统计
 		List<Statistics> orderStatistics = orderService.orderStatistics(map);
@@ -394,8 +388,7 @@ public class InventoryController extends BaseController {
 	@RequestMapping(value = "/super_bill", method = { RequestMethod.POST })
 	@ResponseBody
 	public Map<String, Object> superBill() {
-		Map<String, Object> map = new HashMap<>();
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		// 进货统计
 		map.put("parentProxyId", getParentProxyId());
 		List<Statistics> purchaseStatistics = orderService.purchaseStatistics(map);

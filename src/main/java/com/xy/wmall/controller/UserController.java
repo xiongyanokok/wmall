@@ -3,8 +3,6 @@ package com.xy.wmall.controller;
 import java.util.Date;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +18,8 @@ import com.xy.wmall.model.User;
 import com.xy.wmall.service.ProxyService;
 import com.xy.wmall.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Controller
  * 
@@ -28,12 +28,8 @@ import com.xy.wmall.service.UserService;
  */
 @Controller
 @RequestMapping(value = "/admin/user", produces = { "application/json; charset=UTF-8" })
+@Slf4j
 public class UserController extends BaseController {
-
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
 	private UserService userService;
@@ -61,7 +57,7 @@ public class UserController extends BaseController {
 	public Map<String, Object> query() {
 		return pageInfoResult(map -> {
 			// 查询条件
-			return userService.listUser(map);
+			return userService.listByMap(map);
 		});
 	}
 	
@@ -90,7 +86,7 @@ public class UserController extends BaseController {
 		user.setUpdateTime(new Date());
 		user.setIsDelete(TrueFalseStatusEnum.FALSE.getValue());
 		userService.save(user);
-		logger.info("【{}】保存成功", user);
+		log.info("【{}】保存成功", user);
 		return buildSuccess("保存成功");
 	}
 	
@@ -104,7 +100,7 @@ public class UserController extends BaseController {
 	@RequestMapping(value = "/edit", method = { RequestMethod.GET })
 	public String edit(Model model, Integer id) {
 		Assert.notNull(id, "id为空");
-		User user = userService.getUserById(id);
+		User user = userService.getById(id);
 		Assert.notNull(user, "数据不存在");
 		model.addAttribute("user", user);
 		return "user/edit";
@@ -120,11 +116,11 @@ public class UserController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> update(User user) {
 		Assert.notNull(user, "修改数据为空");
-		User userInfo = userService.getUserById(user.getId());
+		User userInfo = userService.getById(user.getId());
 		Assert.notNull(userInfo, "数据不存在");
 		user.setUpdateTime(new Date());
 		userService.update(user);
-		logger.info("【{}】修改成功", user);
+		log.info("【{}】修改成功", user);
 		return buildSuccess("修改成功");
 	}
 	
@@ -138,10 +134,10 @@ public class UserController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> delete(Integer id) {
 		Assert.notNull(id, "id为空");
-		User user = userService.getUserById(id);
+		User user = userService.getById(id);
 		Assert.notNull(user, "数据不存在");
 		userService.remove(user);
-		logger.info("【{}】删除成功", user);
+		log.info("【{}】删除成功", user);
 		return buildSuccess("删除成功");
 	}
 	
@@ -155,7 +151,7 @@ public class UserController extends BaseController {
 	@RequestMapping(value = "/info", method = { RequestMethod.GET })
 	public String info(Model model) {
 		Integer proxyId = getProxyId();
-		Proxy proxy = proxyService.getProxyById(proxyId);
+		Proxy proxy = proxyService.getById(proxyId);
 		Assert.notNull(proxy, "代理不存在");
 		model.addAttribute("proxy", proxy);
 		return "system/info";
@@ -184,17 +180,20 @@ public class UserController extends BaseController {
 	public Map<String, Object> password(String oldPassword, String newPassword) {
 		Assert.hasLength(oldPassword, "oldPassword为空");
 		Assert.hasLength(newPassword, "newPassword为空");
-		Integer userId = getUserId();
-		User user = userService.getUserById(userId);
+		User user = userService.getById(getUserId());
 		Assert.notNull(user, "用户不存在");
 		if (!user.getPassword().equals(Md5Utils.md5(oldPassword))) {
-			logger.error("当前密码错误：密码【{}】", oldPassword);
+			log.error("当前密码错误：密码【{}】", oldPassword);
 			return buildFail("当前密码错误");
+		}
+		if (oldPassword.equals(newPassword)) {
+			log.error("新密码不能和旧密码一致：新密码【{}】， 旧密码【{}】", newPassword, oldPassword);
+			return buildFail("密码不能一致");
 		}
 		// 修改密码
 		user.setPassword(Md5Utils.md5(newPassword));
 		userService.update(user);
-		logger.info("【{}】修改密码成功", user);
+		log.info("【{}】修改密码成功", user);
 		return buildSuccess("密码修改成功");
 	}
 	

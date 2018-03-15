@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xy.wmall.common.utils.BeanUtils;
+import com.xy.wmall.common.utils.CommonUtils;
 import com.xy.wmall.common.utils.DateUtils;
 import com.xy.wmall.common.utils.JacksonUtils;
 import com.xy.wmall.enums.DeliverTypeEnum;
@@ -71,8 +72,7 @@ public class StatisticsController extends BaseController {
 	@RequestMapping(value = "/query", method = { RequestMethod.POST })
 	@ResponseBody
 	public Map<String, Object> query() {
-		Map<String, Object> map = new HashMap<>();
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		map.put("natureMonth", request.getParameter("natureMonth"));
 		map.put("parentProxyId", getProxyId());
 		// 订单统计
@@ -82,6 +82,7 @@ public class StatisticsController extends BaseController {
 		List<Statistics> purchaseStatistics = orderService.purchaseStatistics(map);
 		// 合并
 		List<Statistics> list = BeanUtils.merge("productId", orderStatistics, purchaseStatistics);
+		
 		// 发货到家统计
 		Map<Integer, Integer> deliverHomeStatisticsMap = new HashMap<>();
 		map.put("deliverStatus", TrueFalseStatusEnum.TRUE.getValue());

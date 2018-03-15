@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xy.wmall.common.Assert;
+import com.xy.wmall.common.utils.CommonUtils;
 import com.xy.wmall.common.utils.DateUtils;
 import com.xy.wmall.common.utils.JacksonUtils;
 import com.xy.wmall.enums.OrderTypeEnum;
@@ -30,6 +29,8 @@ import com.xy.wmall.service.OrderService;
 import com.xy.wmall.service.ProductService;
 import com.xy.wmall.service.WalletService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Controller
  * 
@@ -38,12 +39,8 @@ import com.xy.wmall.service.WalletService;
  */
 @Controller
 @RequestMapping(value = "/admin/purchase", produces = { "application/json; charset=UTF-8" })
+@Slf4j
 public class PurchaseController extends BaseController {
-
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(PurchaseController.class);
 
     @Autowired
 	private OrderService orderService;
@@ -91,7 +88,7 @@ public class PurchaseController extends BaseController {
 			// 订单id
 			map.put("groupBy", "id");
 			// 查询进货单
-			List<Order> orders = orderService.listOrder(map);
+			List<Order> orders = orderService.listByMap(map);
 			if (CollectionUtils.isEmpty(orders)) {
 				return Collections.emptyList();
 			}
@@ -104,7 +101,7 @@ public class PurchaseController extends BaseController {
 			// 查询订单详情
 			Map<String, Object> dMap = new HashMap<>();
 			dMap.put("orderIds", orderIds);
-			List<OrderDetail> orderDetails = orderDetailService.listOrderDetail(dMap);
+			List<OrderDetail> orderDetails = orderDetailService.listByMap(dMap);
 			for (Order order : orders) {
 				List<OrderDetail> details = new ArrayList<>();
 				for (OrderDetail orderDetail : orderDetails) {
@@ -161,7 +158,7 @@ public class PurchaseController extends BaseController {
 		order.setUpdateTime(new Date());
 		order.setIsDelete(TrueFalseStatusEnum.FALSE.getValue());
 		orderService.save(order);
-		logger.info("【{}】保存成功", order);
+		log.info("【{}】保存成功", order);
 		return buildSuccess("保存成功");
 	}
 	
@@ -175,14 +172,13 @@ public class PurchaseController extends BaseController {
 	@RequestMapping(value = "/edit", method = { RequestMethod.GET })
 	public String edit(Model model, Integer id) {
 		Assert.notNull(id, "id为空");
-		Order order = orderService.getOrderById(id);
+		Order order = orderService.getById(id);
 		Assert.notNull(order, "数据不存在");
 		model.addAttribute("order", order);
 		// 查询订单详情
-		Map<String, Object> map = new HashMap<>();
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		map.put("orderId", id);
-		List<OrderDetail> orderDetails = orderDetailService.listOrderDetail(map);
+		List<OrderDetail> orderDetails = orderDetailService.listByMap(map);
 		model.addAttribute("orderDetails", orderDetails);
 		List<Product> products = productService.listProduct();
 		model.addAttribute("products", products);
@@ -205,13 +201,13 @@ public class PurchaseController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> update(Order order) {
 		Assert.notNull(order, "修改数据为空");
-		Order orderInfo = orderService.getOrderById(order.getId());
+		Order orderInfo = orderService.getById(order.getId());
 		Assert.notNull(orderInfo, "数据不存在");
 		order.setProxyId(orderInfo.getProxyId());
 		order.setUpdateUserId(getUserId());
 		order.setUpdateTime(new Date());
 		orderService.update(order);
-		logger.info("【{}】修改成功", order);
+		log.info("【{}】修改成功", order);
 		return buildSuccess("修改成功");
 	}
 	

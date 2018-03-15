@@ -1,13 +1,10 @@
 package com.xy.wmall.controller;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.xy.wmall.common.Assert;
+import com.xy.wmall.common.utils.CommonUtils;
 import com.xy.wmall.common.utils.HttpClientUtils;
 import com.xy.wmall.common.utils.JacksonUtils;
 import com.xy.wmall.enums.TrueFalseStatusEnum;
@@ -29,6 +27,8 @@ import com.xy.wmall.service.DeliverService;
 import com.xy.wmall.service.LogisticsCompanyService;
 import com.xy.wmall.service.LogisticsService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Controller
  * 
@@ -37,12 +37,8 @@ import com.xy.wmall.service.LogisticsService;
  */
 @Controller
 @RequestMapping(value = "/admin/logistics", produces = { "application/json; charset=UTF-8" })
+@Slf4j
 public class LogisticsController extends BaseController {
-
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(LogisticsController.class);
 
     @Autowired
 	private LogisticsService logisticsService;
@@ -73,7 +69,7 @@ public class LogisticsController extends BaseController {
 	public Map<String, Object> query() {
 		return pageInfoResult(map -> {
 			// 查询条件
-			return logisticsService.listLogistics(map);
+			return logisticsService.listByMap(map);
 		});
 	}
 	
@@ -104,7 +100,7 @@ public class LogisticsController extends BaseController {
 		logistics.setUpdateTime(new Date());
 		logistics.setIsDelete(TrueFalseStatusEnum.FALSE.getValue());
 		logisticsService.save(logistics);
-		logger.info("【{}】保存成功", logistics);
+		log.info("【{}】保存成功", logistics);
 		// 立即发货
 		deliver(logistics.getDeliverId());
 		return buildSuccess("保存成功");
@@ -122,8 +118,8 @@ public class LogisticsController extends BaseController {
 		deliver.setInventoryStatus(TrueFalseStatusEnum.TRUE.getValue());
 		deliver.setUpdateUserId(getUserId());
 		deliver.setUpdateTime(new Date());
-		deliverService.status(deliver);
-		logger.info("【{}】发货成功", deliver);
+		deliverService.updateDeliverStatus(deliver);
+		log.info("【{}】发货成功", deliver);
 	}
 	
 	/**
@@ -136,7 +132,7 @@ public class LogisticsController extends BaseController {
 	@RequestMapping(value = "/edit", method = { RequestMethod.GET })
 	public String edit(Model model, Integer id) {
 		Assert.notNull(id, "id为空");
-		Logistics logistics = logisticsService.getLogisticsById(id);
+		Logistics logistics = logisticsService.getById(id);
 		Assert.notNull(logistics, "数据不存在");
 		model.addAttribute("logistics", logistics);
 		return "logistics/edit";
@@ -154,10 +150,9 @@ public class LogisticsController extends BaseController {
 		Assert.notNull(deliverId, "deliverId为空");
 		List<LogisticsCompany> logisticsCompanies = logisticsCompanyService.listLogisticsCompany();
 		model.addAttribute("logisticsCompanies", logisticsCompanies);
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		map.put("deliverId", deliverId);
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
-		Logistics logistics = logisticsService.getLogistics(map);
+		Logistics logistics = logisticsService.getByMap(map);
 		if (null != logistics) {
 			model.addAttribute("logistics", logistics);
 			return "logistics/edit";
@@ -177,12 +172,12 @@ public class LogisticsController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> update(Logistics logistics) {
 		Assert.notNull(logistics, "修改数据为空");
-		Logistics logisticsInfo = logisticsService.getLogisticsById(logistics.getId());
+		Logistics logisticsInfo = logisticsService.getById(logistics.getId());
 		Assert.notNull(logisticsInfo, "数据不存在");
 		logistics.setUpdateUserId(getUserId());
 		logistics.setUpdateTime(new Date());
 		logisticsService.update(logistics);
-		logger.info("【{}】修改成功", logistics);
+		log.info("【{}】修改成功", logistics);
 		// 立即发货
 		deliver(logisticsInfo.getDeliverId());
 		return buildSuccess("修改成功");
@@ -198,10 +193,10 @@ public class LogisticsController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> delete(Integer id) {
 		Assert.notNull(id, "id为空");
-		Logistics logistics = logisticsService.getLogisticsById(id);
+		Logistics logistics = logisticsService.getById(id);
 		Assert.notNull(logistics, "数据不存在");
 		logisticsService.remove(logistics);
-		logger.info("【{}】删除成功", logistics);
+		log.info("【{}】删除成功", logistics);
 		return buildSuccess("删除成功");
 	}
 	
@@ -222,20 +217,19 @@ public class LogisticsController extends BaseController {
 	public String detail(Model model, Integer deliverId) {
 		Assert.notNull(deliverId, "deliverId为空");
 		// 发货物流信息
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		map.put("deliverId", deliverId);
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
-		Logistics logistics = logisticsService.getLogistics(map);
+		Logistics logistics = logisticsService.getByMap(map);
 		Assert.notNull(logistics, "数据不存在");
 		model.addAttribute("logistics", logistics);
 		
 		// 物流公司信息
-		LogisticsCompany logisticsCompany = logisticsCompanyService.getLogisticsCompanyById(logistics.getCompanyId());
+		LogisticsCompany logisticsCompany = logisticsCompanyService.getById(logistics.getCompanyId());
 		Assert.notNull(logisticsCompany, "数据不存在");
 		model.addAttribute("logisticsCompany", logisticsCompany);
 		
 		// 获取物流跟踪信息
-		String value = HttpClientUtils.get(String.format(logisticsUrl, logisticsCompany.getPinyin(), logistics.getNumber()));
+		String value = HttpClientUtils.getInstance().get(String.format(logisticsUrl, logisticsCompany.getPinyin(), logistics.getNumber()));
 		if (StringUtils.isNotEmpty(value)) {
 			value = value.substring(value.indexOf('['), value.lastIndexOf(']') + 1);
 			List<LogisticsInfo> logisticsInfos = JacksonUtils.deserialize(value, new TypeReference<List<LogisticsInfo>>() { });
@@ -243,4 +237,25 @@ public class LogisticsController extends BaseController {
 		}
 		return "logistics/detail";
 	}
+	
+	/**
+	 * 进入补价页面
+	 * 
+	 * @param model
+	 * @param deliverId
+	 * @return
+	 */
+	@RequestMapping(value = "/add_price", method = { RequestMethod.GET })
+	public String addPrice(Model model, Integer deliverId) {
+		Assert.notNull(deliverId, "deliverId为空");
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
+		map.put("deliverId", deliverId);
+		Logistics logistics = logisticsService.getByMap(map);
+		Assert.notNull(logistics, "数据不存在");
+		List<LogisticsCompany> logisticsCompanies = logisticsCompanyService.listLogisticsCompany();
+		model.addAttribute("logisticsCompanies", logisticsCompanies);
+		model.addAttribute("logistics", logistics);
+		return "logistics/price";
+	}
+	
 }

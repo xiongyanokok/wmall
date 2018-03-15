@@ -19,14 +19,6 @@
   		id, product_type, product_name, product_desc, create_user_id, create_time, update_user_id, update_time, is_delete
   	</sql>
   	
-  	<!-- 根据主键查询 -->
-  	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    	select 
-    	<include refid="Base_Column_List" />
-    	from t_product
-		where id = #{id}
-  	</select>
-  	
   	<!-- 新增数据库记录 -->
   	<insert id="insert" parameterType="com.xy.wmall.model.Product">
     	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
@@ -119,8 +111,13 @@
     	</where>
   	</update>
   	
+  	<!-- 删除数据库记录 -->
+  	<update id="delete" parameterType="com.xy.wmall.model.Product">
+    	update t_product set is_delete = 1 where id = #{id}
+  	</update>
+  	
 	<!-- 根据map查询 -->
-  	<select id="getProduct" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	<select id="getByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
   		select
         <include refid="Base_Column_List"/>
         from t_product
@@ -156,7 +153,7 @@
   	</select>
   
   	<!-- 根据map查询-->
-  	<select id="listProduct" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	<select id="listByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
   		select
         <include refid="Base_Column_List"/>
         from t_product
@@ -239,7 +236,7 @@
 	</update>
 	
 	<!-- 查询产品列表 -->
-  	<select id="selectProduct" resultMap="BaseResultMap">
+  	<select id="listProduct" resultMap="BaseResultMap">
   		select id, product_type, product_name from t_product where is_delete = 0 order by create_time desc
   	</select>
 	

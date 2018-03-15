@@ -36,6 +36,11 @@ public final class Constant {
 	 * 响应数据
 	 */
 	public static final String DEFAULT_DATA = "data";
+	
+	/**
+	 * 删除标记
+	 */
+	public static final String ISDELETE = "isDelete";
 
 	/**
 	 * session key
@@ -51,5 +56,10 @@ public final class Constant {
 	 * product cache
 	 */
 	public static final String PRODUCT_CACHE = "product";
+	
+	/**
+	 * logistics cache
+	 */
+	public static final String LOGISTICS_CACHE = "logistics";
 	
 }

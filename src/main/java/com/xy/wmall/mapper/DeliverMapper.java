@@ -12,68 +12,8 @@ import com.xy.wmall.pojo.Statistics;
  * @author admin
  * @date 2017年10月28日 上午08:53:59
  */
-public interface DeliverMapper {
+public interface DeliverMapper extends BaseMapper<Deliver> {
 
-	/**
-     * 根据主键查询
-     *
-     * @param id
-     * @return
-     */
-    Deliver selectByPrimaryKey(Integer id);
-
-    /**
-     * 新增数据库记录
-     *
-     * @param deliver
-     */
-    void insert(Deliver deliver);
-
-    /**
-     * 更新数据库记录
-     *
-     * @param deliver
-     */
-    void update(Deliver deliver);
-
-    /**
-     * 根据map查询
-     * 
-     * @param map
-     * @return
-     */
-    Deliver getDeliver(Map<String, Object> map);
-    
-    /**
-     * 根据map查询
-     * 
-     * @param map
-     * @return
-     */
-    List<Deliver> listDeliver(Map<String, Object> map);
-    
-    /**
-     * 查询发货单
-     * 
-     * @param map
-     * @return
-     */
-    List<Deliver> queryDeliver(Map<String, Object> map);
-    
-    /**
-     * 批量保存
-     * 
-     * @param list
-     */
-    void batchInsert(List<Deliver> list);
-    
-    /**
-     * 批量更新
-     * 
-     * @param list
-     */
-    void batchUpdate(List<Deliver> list);
-    
     /**
      * 发货统计
      * 

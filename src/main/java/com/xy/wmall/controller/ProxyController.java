@@ -7,8 +7,6 @@ import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +24,8 @@ import com.xy.wmall.service.ProductService;
 import com.xy.wmall.service.ProxyService;
 import com.xy.wmall.service.WalletService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Controller
  * 
@@ -34,12 +34,8 @@ import com.xy.wmall.service.WalletService;
  */
 @Controller
 @RequestMapping(value = "/admin/proxy", produces = { "application/json; charset=UTF-8" })
+@Slf4j
 public class ProxyController extends BaseController {
-
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(ProxyController.class);
 
     @Autowired
 	private ProxyService proxyService;
@@ -80,7 +76,7 @@ public class ProxyController extends BaseController {
 			// 手机号
 			map.put("phone", request.getParameter("phone"));
 			// 查询代理
-			List<Proxy> proxyList = proxyService.listProxy(map);
+			List<Proxy> proxyList = proxyService.listByMap(map);
 			if (CollectionUtils.isEmpty(proxyList)) {
 				return proxyList;
 			}
@@ -131,7 +127,7 @@ public class ProxyController extends BaseController {
 		proxy.setUpdateTime(new Date());
 		proxy.setIsDelete(TrueFalseStatusEnum.FALSE.getValue());
 		proxyService.save(proxy);
-		logger.info("【{}】保存成功", proxy);
+		log.info("【{}】保存成功", proxy);
 		return buildSuccess("保存成功");
 	}
 	
@@ -145,7 +141,7 @@ public class ProxyController extends BaseController {
 	@RequestMapping(value = "/edit", method = { RequestMethod.GET })
 	public String edit(Model model, Integer id) {
 		Assert.notNull(id, "id为空");
-		Proxy proxy = proxyService.getProxyById(id);
+		Proxy proxy = proxyService.getById(id);
 		Assert.notNull(proxy, "数据不存在");
 		model.addAttribute("proxy", proxy);
 		return "proxy/edit";
@@ -161,12 +157,12 @@ public class ProxyController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> update(Proxy proxy) {
 		Assert.notNull(proxy, "修改数据为空");
-		Proxy proxyInfo = proxyService.getProxyById(proxy.getId());
+		Proxy proxyInfo = proxyService.getById(proxy.getId());
 		Assert.notNull(proxyInfo, "数据不存在");
 		proxy.setUpdateUserId(getUserId());
 		proxy.setUpdateTime(new Date());
 		proxyService.update(proxy);
-		logger.info("【{}】修改成功", proxy);
+		log.info("【{}】修改成功", proxy);
 		return buildSuccess("修改成功");
 	}
 	
@@ -180,10 +176,10 @@ public class ProxyController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> delete(Integer id) {
 		Assert.notNull(id, "id为空");
-		Proxy proxy = proxyService.getProxyById(id);
+		Proxy proxy = proxyService.getById(id);
 		Assert.notNull(proxy, "数据不存在");
 		proxyService.remove(proxy);
-		logger.info("【{}】删除成功", proxy);
+		log.info("【{}】删除成功", proxy);
 		return buildSuccess("删除成功");
 	}
 	
@@ -197,7 +193,7 @@ public class ProxyController extends BaseController {
 	@RequestMapping(value = "/detail", method = {RequestMethod.GET})
 	public String detail(Model model, Integer id) {
 		Assert.notNull(id, "id为空");
-		Proxy proxy = proxyService.getProxyById(id);
+		Proxy proxy = proxyService.getById(id);
 		Assert.notNull(proxy, "数据不存在");
 		model.addAttribute("proxy", proxy);
 		return "proxy/detail";
@@ -211,7 +207,7 @@ public class ProxyController extends BaseController {
 	@RequestMapping(value = "/order_list", method = { RequestMethod.GET })
 	public String orderList(Model model, Integer proxyId) {
 		Assert.notNull(proxyId, "proxyId为空");
-		Proxy proxy = proxyService.getProxyById(proxyId);
+		Proxy proxy = proxyService.getById(proxyId);
 		Assert.notNull(proxy, "代理不存在");
 		model.addAttribute("proxy", proxy);
 		List<Product> products = productService.listProduct();
@@ -230,7 +226,7 @@ public class ProxyController extends BaseController {
 	@RequestMapping(value = "/deliver_list", method = { RequestMethod.GET })
 	public String deliverList(Model model, Integer proxyId) {
 		Assert.notNull(proxyId, "proxyId为空");
-		Proxy proxy = proxyService.getProxyById(proxyId);
+		Proxy proxy = proxyService.getById(proxyId);
 		Assert.notNull(proxy, "代理不存在");
 		model.addAttribute("proxy", proxy);
 		List<Product> products = productService.listProduct();

@@ -8,6 +8,9 @@
 <meta http-equiv="Cache-Control" content="no-siteapp" />
 <link rel="stylesheet" type="text/css" th:href="@{/static/h-ui/css/H-ui.min.css}" />
 <link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/H-ui.admin.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/lib/Hui-iconfont/1.0.8/iconfont.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/skin/default/skin.css}" id="skin" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/h-ui.admin/css/style.css}" />
 <style>
 	ul li{list-style: none;}
 	.track-list{margin: 20px; padding-left: 5px; position: relative;}
@@ -29,11 +32,14 @@
 				<span style="padding-right: 3%;"></span>
 				物流单号：[[${logistics.number}]]
 				<span style="padding-right: 3%;"></span>
-				物流价格：[[${logistics.price + logistics.cost}]]
+				<span th:if="${logistics.price > 0}">
+					物流价格：[[${logistics.price + logistics.cost}]]
+				</span>
 				<span th:if="${not #strings.isEmpty(logistics.remark)}">
 					<span style="padding-right: 3%;">
 					</span>备注：[[${logistics.remark}]]
 				</span>
+				<button th:if="${logistics.price == 0}" onclick="addPrice()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe600;</i> 补价</button>
 			</div>
 		</nav>
 	</div>
@@ -55,3 +61,22 @@
 	</div>
 </body>
 </html>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" th:src="@{/lib/jquery/1.9.1/jquery.min.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/layer/2.4/layer.js}"></script>
+<script type="text/javascript" th:src="@{/static/h-ui/js/H-ui.min.js}"></script> 
+<script type="text/javascript" th:src="@{/static/h-ui.admin/js/H-ui.admin.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script> 
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" th:src="@{/lib/datatables/1.10.0/jquery.dataTables.min.js}"></script> 
+<script type="text/javascript" th:src="@{/lib/laypage/1.2/laypage.js}"></script>
+<script th:inline="javascript">
+	// 补价
+	function addPrice() {
+		var id = [[${logistics.deliverId}]];
+		layer_show("物流补价", "/admin/logistics/add_price?deliverId="+id, "500", "330");
+	}
+</script>	

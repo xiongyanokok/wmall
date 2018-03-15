@@ -20,8 +20,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xy.wmall.common.Assert;
+import com.xy.wmall.common.utils.CommonUtils;
 import com.xy.wmall.common.utils.DateUtils;
 import com.xy.wmall.common.utils.JacksonUtils;
 import com.xy.wmall.enums.DeliverTypeEnum;
@@ -47,6 +46,8 @@ import com.xy.wmall.service.LogisticsService;
 import com.xy.wmall.service.ProductService;
 import com.xy.wmall.service.ProxyService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Controller
  * 
@@ -55,12 +56,8 @@ import com.xy.wmall.service.ProxyService;
  */
 @Controller
 @RequestMapping(value = "/admin/deliver", produces = { "application/json; charset=UTF-8" })
+@Slf4j
 public class DeliverController extends BaseController {
-
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(DeliverController.class);
 
     @Autowired
 	private DeliverService deliverService;
@@ -172,7 +169,7 @@ public class DeliverController extends BaseController {
 			// 发货单id
 			map.put("groupBy", "id"); 
 			// 查询发货单
-			List<Deliver> delivers = deliverService.listDeliver(map);
+			List<Deliver> delivers = deliverService.listByMap(map);
 			if (CollectionUtils.isEmpty(delivers)) {
 				return Collections.emptyList();
 			}
@@ -185,7 +182,7 @@ public class DeliverController extends BaseController {
 			// 查询发货单详情
 			Map<String, Object> detailMap = new HashMap<>();
 			detailMap.put("deliverIds", deliverIds);
-			List<DeliverDetail> deliverDetails = deliverDetailService.listDeliverDetail(detailMap);
+			List<DeliverDetail> deliverDetails = deliverDetailService.listByMap(detailMap);
 			for (Deliver deliver : delivers) {
 				List<DeliverDetail> details = new ArrayList<>();
 				for (DeliverDetail deliverDetail : deliverDetails) {
@@ -213,7 +210,7 @@ public class DeliverController extends BaseController {
 			model.addAttribute("proxyId", proxyId);
 		}
 		Assert.notNull(proxyId, "proxyId为空");
-		Proxy proxy = proxyService.getProxyById(proxyId);
+		Proxy proxy = proxyService.getById(proxyId);
 		Assert.notNull(proxy, "代理不存在");
 		model.addAttribute("proxy", proxy);
 		List<Product> products = productService.listProduct();
@@ -244,7 +241,7 @@ public class DeliverController extends BaseController {
 		deliver.setUpdateTime(new Date());
 		deliver.setIsDelete(TrueFalseStatusEnum.FALSE.getValue());
 		deliverService.save(deliver);
-		logger.info("【{}】保存成功", deliver);
+		log.info("【{}】保存成功", deliver);
 		return buildSuccess("保存成功");
 	}
 	
@@ -258,13 +255,13 @@ public class DeliverController extends BaseController {
 	@RequestMapping(value = "/edit", method = { RequestMethod.GET })
 	public String edit(Model model, Integer id) {
 		Assert.notNull(id, "id为空");
-		Deliver deliver = deliverService.getDeliverById(id);
+		Deliver deliver = deliverService.getById(id);
 		Assert.notNull(deliver, id + "不存在");
 		model.addAttribute("deliver", deliver);
 		// 查询发货详情
 		Map<String, Object> map = new HashMap<>();
 		map.put("deliverId", id);
-		List<DeliverDetail> deliverDetails = deliverDetailService.listDeliverDetail(map);
+		List<DeliverDetail> deliverDetails = deliverDetailService.listByMap(map);
 		model.addAttribute("deliverDetails", deliverDetails);
 		List<Product> products = productService.listProduct();
 		model.addAttribute("products", products);
@@ -281,12 +278,12 @@ public class DeliverController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> update(Deliver deliver) {
 		Assert.notNull(deliver, "修改数据为空");
-		Deliver deliverInfo = deliverService.getDeliverById(deliver.getId());
+		Deliver deliverInfo = deliverService.getById(deliver.getId());
 		Assert.notNull(deliverInfo, "数据不存在");
 		deliver.setUpdateUserId(getUserId());
 		deliver.setUpdateTime(new Date());
 		deliverService.update(deliver);
-		logger.info("【{}】修改成功", deliver);
+		log.info("【{}】修改成功", deliver);
 		return buildSuccess("修改成功");
 	}
 	
@@ -300,10 +297,10 @@ public class DeliverController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> delete(Integer id) {
 		Assert.notNull(id, "id为空");
-		Deliver deliver = deliverService.getDeliverById(id);
+		Deliver deliver = deliverService.getById(id);
 		Assert.notNull(deliver, "数据不存在");
 		deliverService.remove(deliver);
-		logger.info("【{}】删除成功", deliver);
+		log.info("【{}】删除成功", deliver);
 		return buildSuccess("删除成功");
 	}
 	
@@ -317,10 +314,12 @@ public class DeliverController extends BaseController {
 	@RequestMapping(value = "/report", method = { RequestMethod.GET })
 	public String report(Model model, String ids) {
 		Assert.hasLength(ids, "请选择发货单");
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
+		map.put("deliverStatus", TrueFalseStatusEnum.FALSE.getValue());
 		map.put("ids", Arrays.asList(ids.split(",")));
+		map.put("orderBy", "create_time");
 		// 发货单
-		List<Deliver> delivers = deliverService.queryDeliver(map);
+		List<Deliver> delivers = deliverService.listByMap(map);
 		Assert.notEmpty(delivers, "查看发货单不存在");
 		// 获取发货单id
 		List<Integer> deliverIds = new ArrayList<>(delivers.size());
@@ -330,7 +329,7 @@ public class DeliverController extends BaseController {
 		// 发货单详情
 		Map<String, Object> detailMap = new HashMap<>();
 		detailMap.put("deliverIds", deliverIds);
-		List<DeliverDetail> deliverDetails = deliverDetailService.listDeliverDetail(detailMap);
+		List<DeliverDetail> deliverDetails = deliverDetailService.listByMap(detailMap);
 		for (Deliver deliver : delivers) {
 			List<DeliverDetail> details = new ArrayList<>();
 			for (DeliverDetail deliverDetail : deliverDetails) {
@@ -357,7 +356,7 @@ public class DeliverController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> deliverStatus(Integer id) {
 		Assert.notNull(id, "id为空");
-		Deliver deliverInfo = deliverService.getDeliverById(id);
+		Deliver deliverInfo = deliverService.getById(id);
 		Assert.notNull(deliverInfo, "数据不存在");
 		// 修改已发货
 		Deliver deliver = new Deliver();
@@ -368,8 +367,8 @@ public class DeliverController extends BaseController {
 		}
 		deliver.setUpdateUserId(getUserId());
 		deliver.setUpdateTime(new Date());
-		deliverService.status(deliver);
-		logger.info("【{}】发货成功", deliver);
+		deliverService.updateDeliverStatus(deliver);
+		log.info("【{}】发货成功", deliver);
 		return buildSuccess("发货成功");
 	}
 	
@@ -383,7 +382,7 @@ public class DeliverController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> deliverReset(Integer id) {
 		Assert.notNull(id, "id为空");
-		Deliver deliverInfo = deliverService.getDeliverById(id);
+		Deliver deliverInfo = deliverService.getById(id);
 		Assert.notNull(deliverInfo, "数据不存在");
 		// 撤销发货
 		Deliver deliver = new Deliver();
@@ -392,8 +391,8 @@ public class DeliverController extends BaseController {
 		deliver.setInventoryStatus(TrueFalseStatusEnum.FALSE.getValue());
 		deliver.setUpdateUserId(getUserId());
 		deliver.setUpdateTime(new Date());
-		deliverService.status(deliver);
-		logger.info("【{}】撤销发货成功", deliver);
+		deliverService.updateDeliverStatus(deliver);
+		log.info("【{}】撤销发货成功", deliver);
 		return buildSuccess("撤销发货成功");
 	}
 	
@@ -410,7 +409,7 @@ public class DeliverController extends BaseController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("ids", Arrays.asList(ids.split(",")));
 		deliverService.batchInventory(map);
-		logger.info("【{}】批量对货成功", map);
+		log.info("【{}】批量对货成功", map);
 		return buildSuccess("对货成功");
 	}
 	
@@ -424,24 +423,23 @@ public class DeliverController extends BaseController {
 	@RequestMapping(value = "/detail", method = { RequestMethod.GET })
 	public String detail(Model model, Integer id) {
 		Assert.notNull(id, "id为空");
-		Deliver deliver = deliverService.getDeliverById(id);
+		Deliver deliver = deliverService.getById(id);
 		Assert.notNull(deliver, "数据不存在");
 		model.addAttribute("deliver", deliver);
 		
 		// 查询发货详情
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		map.put("deliverId", id);
-		List<DeliverDetail> deliverDetails = deliverDetailService.listDeliverDetail(map);
+		List<DeliverDetail> deliverDetails = deliverDetailService.listByMap(map);
 		model.addAttribute("deliverDetails", deliverDetails);
 		List<Product> products = productService.listProduct();
 		model.addAttribute("products", products);
 		
 		// 发货物流信息
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
-		Logistics logistics = logisticsService.getLogistics(map);
+		Logistics logistics = logisticsService.getByMap(map);
 		if (null != logistics) {
 			model.addAttribute("logistics", logistics);
-			LogisticsCompany logisticsCompany = logisticsCompanyService.getLogisticsCompanyById(logistics.getCompanyId());
+			LogisticsCompany logisticsCompany = logisticsCompanyService.getById(logistics.getCompanyId());
 			model.addAttribute("name", logisticsCompany.getName());
 		}
 		return "deliver/detail";
@@ -452,8 +450,7 @@ public class DeliverController extends BaseController {
 	 */
 	@RequestMapping(value = "/export", method = { RequestMethod.GET })
 	public void export() {
-		Map<String, Object> map = new HashMap<>();
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		// 代理id
 		String proxyId = request.getParameter("proxyId");
 		map.put("proxyId", proxyId); 
@@ -484,7 +481,7 @@ public class DeliverController extends BaseController {
 		map.put("groupBy", "id");
 		// 发货时间排序
 		map.put("orderBy", "create_time desc");
-		List<Deliver> delivers = deliverService.listDeliver(map);
+		List<Deliver> delivers = deliverService.listByMap(map);
 		if (CollectionUtils.isEmpty(delivers)) {
 			return;
 		}
@@ -497,9 +494,9 @@ public class DeliverController extends BaseController {
 		// 查询发货单详情
 		Map<String, Object> detailMap = new HashMap<>();
 		detailMap.put("deliverIds", deliverIds);
-		List<DeliverDetail> deliverDetails = deliverDetailService.listDeliverDetail(detailMap);
+		List<DeliverDetail> deliverDetails = deliverDetailService.listByMap(detailMap);
 		// 查询快递信息
-		List<Logistics> logisticss = logisticsService.listLogistics(detailMap);
+		List<Logistics> logisticss = logisticsService.listByMap(detailMap);
 		for (Deliver deliver : delivers) {
 			List<DeliverDetail> details = new ArrayList<>();
 			for (DeliverDetail deliverDetail : deliverDetails) {
@@ -518,7 +515,7 @@ public class DeliverController extends BaseController {
 
 		String wechatName = "";
 		if (StringUtils.isNotEmpty(proxyId)) {
-			Proxy proxy = proxyService.getProxyById(Integer.valueOf(proxyId));
+			Proxy proxy = proxyService.getById(Integer.valueOf(proxyId));
 			Assert.notNull(proxy, "代理不存在");
 			wechatName = proxy.getWechatName() + "_";
 		}
@@ -698,7 +695,7 @@ public class DeliverController extends BaseController {
 			// 输出
 			workbook.write(out);
 		} catch (Exception e) {
-			logger.error("导出excel失败：", e);
+			log.error("导出excel失败：", e);
 		}
 	}
 }

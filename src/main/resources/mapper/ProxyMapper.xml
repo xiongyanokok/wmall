@@ -27,14 +27,6 @@
   		id, parent_id, wechat_number, wechat_name, name, sex, phone, address, proxy_price, id_number, authorization_code, remark, create_user_id, create_time, update_user_id, update_time, is_delete
   	</sql>
   	
-  	<!-- 根据主键查询 -->
-  	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    	select 
-    	<include refid="Base_Column_List" />
-    	from t_proxy
-		where id = #{id}
-  	</select>
-  	
   	<!-- 新增数据库记录 -->
   	<insert id="insert" parameterType="com.xy.wmall.model.Proxy">
     	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
@@ -199,8 +191,13 @@
     	</where>
   	</update>
   	
+  	<!-- 删除数据库记录 -->
+  	<update id="delete" parameterType="com.xy.wmall.model.Proxy">
+    	update t_proxy set is_delete = 1 where id = #{id}
+  	</update>
+  	
 	<!-- 根据map查询 -->
-  	<select id="getProxy" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	<select id="getByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
   		select
         <include refid="Base_Column_List"/>
         from t_proxy
@@ -260,7 +257,7 @@
   	</select>
   
   	<!-- 根据map查询-->
-  	<select id="listProxy" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	<select id="listByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
   		select
         <include refid="Base_Column_List"/>
         from t_proxy

@@ -1,12 +1,9 @@
 package com.xy.wmall.controller;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,15 +12,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xy.wmall.common.Constant;
+import com.xy.wmall.common.utils.CommonUtils;
 import com.xy.wmall.common.utils.DateUtils;
 import com.xy.wmall.common.utils.Md5Utils;
-import com.xy.wmall.enums.TrueFalseStatusEnum;
 import com.xy.wmall.exception.WmallException;
 import com.xy.wmall.model.Proxy;
 import com.xy.wmall.model.User;
 import com.xy.wmall.pojo.UserInfo;
 import com.xy.wmall.service.ProxyService;
 import com.xy.wmall.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Controller
@@ -33,12 +32,8 @@ import com.xy.wmall.service.UserService;
  */
 @Controller
 @RequestMapping(value = "/", produces = {"application/json; charset=UTF-8"})
+@Slf4j
 public class MainController extends BaseController {
-	
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 	
 	@Autowired
 	private UserService userService;
@@ -69,25 +64,24 @@ public class MainController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> login(String username, String password, String checkCode) {
 		if (StringUtils.isAnyEmpty(username, password, checkCode)) {
-			logger.error("代理失败：用户名或密码或验证码为空");
+			log.error("代理失败：用户名或密码或验证码为空");
 			throw new WmallException("登录失败");
 		}
 		
 		// 验证验证码
 		String imageCode = (String) session.getAttribute(Constant.IMAGE_CODE);
 		if (StringUtils.isEmpty(imageCode) || !imageCode.equalsIgnoreCase(checkCode)) {
-			logger.error("验证码错误：session验证码【{}】，登录验证码【{}】", imageCode, checkCode);
+			log.error("验证码错误：session验证码【{}】，登录验证码【{}】", imageCode, checkCode);
 			return buildFail("验证码错误");
 		}
 		// 清除验证码session
 		session.removeAttribute(Constant.IMAGE_CODE);
 		
-		Map<String, Object> map = new HashMap<>(2);
+		Map<String, Object> map = CommonUtils.defaultQueryMap();
 		map.put("username", username);
-		map.put("isDelete", TrueFalseStatusEnum.FALSE.getValue());
-		User user = userService.getUser(map);
+		User user = userService.getByMap(map);
 		if (null == user || !user.getPassword().equals(Md5Utils.md5(password))) {
-			logger.error("用户名或密码错误：用户名【{}】，密码【{}】", username, password);
+			log.error("用户名或密码错误：用户名【{}】，密码【{}】", username, password);
 			return buildFail("用户名或密码错误");
 		}
 		
@@ -111,7 +105,7 @@ public class MainController extends BaseController {
 		if (userInfo.getProxyId() == 0) {
 			model.addAttribute("name", "管理员");
 		} else {
-			Proxy proxy = proxyService.getProxyById(getProxyId());
+			Proxy proxy = proxyService.getById(getProxyId());
 			userInfo.setParentProxyId(0);
 			userInfo.setWechatName(proxy.getWechatName());
 			model.addAttribute("name", proxy.getWechatName());

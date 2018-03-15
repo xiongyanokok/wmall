@@ -18,14 +18,6 @@
   		id, proxy_id, username, password, type, create_time, update_time, is_delete
   	</sql>
   	
-  	<!-- 根据主键查询 -->
-  	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    	select 
-    	<include refid="Base_Column_List" />
-    	from t_user
-		where id = #{id}
-  	</select>
-  	
   	<!-- 新增数据库记录 -->
   	<insert id="insert" parameterType="com.xy.wmall.model.User">
     	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
@@ -112,8 +104,13 @@
     	</where>
   	</update>
   	
+  	<!-- 删除数据库记录 -->
+  	<update id="delete" parameterType="com.xy.wmall.model.User">
+    	update t_user set is_delete = 1 where id = #{id}
+  	</update>
+  	
 	<!-- 根据map查询 -->
-  	<select id="getUser" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	<select id="getByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
   		select
         <include refid="Base_Column_List"/>
         from t_user
@@ -146,7 +143,7 @@
   	</select>
   
   	<!-- 根据map查询-->
-  	<select id="listUser" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	<select id="listByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
   		select
         <include refid="Base_Column_List"/>
         from t_user

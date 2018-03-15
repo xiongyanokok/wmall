@@ -3,8 +3,6 @@ package com.xy.wmall.controller;
 import java.util.Date;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +18,8 @@ import com.xy.wmall.model.Wallet;
 import com.xy.wmall.service.ProxyService;
 import com.xy.wmall.service.WalletService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Controller
  * 
@@ -28,12 +28,8 @@ import com.xy.wmall.service.WalletService;
  */
 @Controller
 @RequestMapping(value = "/admin/wallet", produces = { "application/json; charset=UTF-8" })
+@Slf4j
 public class WalletController extends BaseController {
-
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(WalletController.class);
 
     @Autowired
 	private WalletService walletService;
@@ -52,7 +48,7 @@ public class WalletController extends BaseController {
 			proxyId = getProxyId();
 		}
 		Assert.notNull(proxyId, "proxyId为空");
-		Proxy proxy = proxyService.getProxyById(proxyId);
+		Proxy proxy = proxyService.getById(proxyId);
 		Assert.notNull(proxy, "代理不存在");
 		model.addAttribute("proxy", proxy);
 		return "wallet/list";
@@ -68,13 +64,11 @@ public class WalletController extends BaseController {
 	public Map<String, Object> query() {
 		return pageInfoResult(map -> {
 			// 查询条件
-			String proxyId = request.getParameter("proxyId");
-			Assert.notNull(proxyId, "proxyId为空");
 			// 代理ID
-			map.put("proxyId", proxyId); 
+			map.put("proxyId", request.getParameter("proxyId")); 
 			// 类型
 			map.put("type", request.getParameter("type")); 
-			return walletService.listWallet(map);
+			return walletService.listByMap(map);
 		});
 	}
 	
@@ -87,7 +81,7 @@ public class WalletController extends BaseController {
 	@RequestMapping(value = "/add", method = { RequestMethod.GET })
 	public String add(Model model, Integer proxyId) {
 		Assert.notNull(proxyId, "proxyId为空");
-		Proxy proxy = proxyService.getProxyById(proxyId);
+		Proxy proxy = proxyService.getById(proxyId);
 		Assert.notNull(proxy, "代理不存在");
 		model.addAttribute("proxy", proxy);
 		model.addAttribute("type", ArithmeticTypeEnum.ADD.getValue());
@@ -103,7 +97,7 @@ public class WalletController extends BaseController {
 	@RequestMapping(value = "/expenses", method = { RequestMethod.GET })
 	public String expenses(Model model, Integer proxyId) {
 		Assert.notNull(proxyId, "proxyId为空");
-		Proxy proxy = proxyService.getProxyById(proxyId);
+		Proxy proxy = proxyService.getById(proxyId);
 		Assert.notNull(proxy, "代理不存在");
 		model.addAttribute("proxy", proxy);
 		model.addAttribute("type", ArithmeticTypeEnum.SUB.getValue());
@@ -128,7 +122,7 @@ public class WalletController extends BaseController {
 		wallet.setUpdateTime(new Date());
 		wallet.setIsDelete(TrueFalseStatusEnum.FALSE.getValue());
 		walletService.save(wallet);
-		logger.info("【{}】保存成功", wallet);
+		log.info("【{}】保存成功", wallet);
 		return buildSuccess("保存成功");
 	}
 	
@@ -142,10 +136,10 @@ public class WalletController extends BaseController {
 	@RequestMapping(value = "/edit", method = { RequestMethod.GET })
 	public String edit(Model model, Integer id) {
 		Assert.notNull(id, "id为空");
-		Wallet wallet = walletService.getWalletById(id);
+		Wallet wallet = walletService.getById(id);
 		Assert.notNull(wallet, "数据不存在");
 		model.addAttribute("wallet", wallet);
-		Proxy proxy = proxyService.getProxyById(wallet.getProxyId());
+		Proxy proxy = proxyService.getById(wallet.getProxyId());
 		Assert.notNull(proxy, "代理不存在");
 		model.addAttribute("proxy", proxy);
 		return "wallet/edit";
@@ -161,12 +155,12 @@ public class WalletController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> update(Wallet wallet) {
 		Assert.notNull(wallet, "修改数据为空");
-		Wallet walletInfo = walletService.getWalletById(wallet.getId());
+		Wallet walletInfo = walletService.getById(wallet.getId());
 		Assert.notNull(walletInfo, "数据不存在");
 		wallet.setUpdateUserId(getUserId());
 		wallet.setUpdateTime(new Date());
 		walletService.update(wallet);
-		logger.info("【{}】修改成功", wallet);
+		log.info("【{}】修改成功", wallet);
 		return buildSuccess("修改成功");
 	}
 	
@@ -180,10 +174,10 @@ public class WalletController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> delete(Integer id) {
 		Assert.notNull(id, "id为空");
-		Wallet wallet = walletService.getWalletById(id);
+		Wallet wallet = walletService.getById(id);
 		Assert.notNull(wallet, "数据不存在");
 		walletService.remove(wallet);
-		logger.info("【{}】删除成功", wallet);
+		log.info("【{}】删除成功", wallet);
 		return buildSuccess("删除成功");
 	}
 	

@@ -9,6 +9,8 @@ import java.util.TreeMap;
 import org.apache.commons.collections4.MapUtils;
 
 import com.xy.wmall.enums.PriceTypeEnum;
+import com.xy.wmall.enums.TrueFalseStatusEnum;
+import com.xy.wmall.model.LogisticsCompany;
 import com.xy.wmall.model.Price;
 
 /**
@@ -20,7 +22,6 @@ import com.xy.wmall.model.Price;
 public final class WmallCache {
 
 	private WmallCache() {
-		
 	}
 	
 	/**
@@ -33,9 +34,14 @@ public final class WmallCache {
 	 */
 	private static Map<Integer, TreeMap<Integer, BigDecimal>> proxyPriceMap = new HashMap<>();
 	
+	/**
+	 * 物流公司
+	 */
+	private static Map<Integer, LogisticsCompany> logisticsCompanyMap = new HashMap<>();
+	
 	
 	/**
-	 * 产品价
+	 * 添加产品价
 	 * 
 	 * @param price
 	 */
@@ -93,10 +99,10 @@ public final class WmallCache {
 		if (priceMap.lastKey() < amount) {
 			return null;
 		}
-		SortedMap<Integer, BigDecimal> subMap = priceMap.headMap(amount, true);
+		SortedMap<Integer, BigDecimal> subMap = priceMap.headMap(amount, TrueFalseStatusEnum.TRUE.getValue());
 		Integer key = null;
 		if (MapUtils.isEmpty(subMap)) {
-			subMap = priceMap.tailMap(amount, true);
+			subMap = priceMap.tailMap(amount, TrueFalseStatusEnum.TRUE.getValue());
 			key = subMap.firstKey();
 		} else {
 			key = subMap.lastKey();
@@ -104,4 +110,46 @@ public final class WmallCache {
 		return priceMap.get(key);
 	}
 	
+	/**
+	 * 添加物流公司缓存
+	 * 
+	 * @param logisticsCompany
+	 */
+	public static void putLogisticsCompany(LogisticsCompany logisticsCompany) {
+		LogisticsCompany company = new LogisticsCompany();
+		company.setName(logisticsCompany.getName());
+		company.setPinyin(logisticsCompany.getPinyin());
+		logisticsCompanyMap.put(logisticsCompany.getId(), company);
+	}
+	
+	/**
+	 * 删除物流公司缓存
+	 * 
+	 * @param id
+	 */
+	public static void removeLogisticsCompany(Integer id) {
+		logisticsCompanyMap.remove(id);
+	}
+	
+	/**
+	 * 获取物流公司名称
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static String getLogisticsCompanyName(Integer id) {
+		LogisticsCompany logisticsCompany = logisticsCompanyMap.get(id);
+		return null != logisticsCompany ? logisticsCompany.getName() : null;
+	}
+	
+	/**
+	 * 获取物流公司拼音
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static String getLogisticsCompanyPinyin(Integer id) {
+		LogisticsCompany logisticsCompany = logisticsCompanyMap.get(id);
+		return null != logisticsCompany ? logisticsCompany.getPinyin() : null;
+	}
 }

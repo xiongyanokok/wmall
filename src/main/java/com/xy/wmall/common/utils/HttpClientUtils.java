@@ -21,18 +21,37 @@ import com.xy.wmall.common.Constant;
  */
 public class HttpClientUtils {
 	
-	private HttpClientUtils() {
-		
-	}
+	private CloseableHttpAsyncClient httpClient = null;
 
-	private static CloseableHttpAsyncClient httpClient;
-	
 	/**
-	 * 初始化 HttpAsyncClients
+	 * 初始化HttpAsyncClients
 	 */
-	public static void init() {
+	private HttpClientUtils() {
 		httpClient = HttpAsyncClients.createDefault();
 		httpClient.start();
+	}
+	
+	/**
+	 * 内部类
+	 */
+	private static class SingletonHolder {
+		
+		private SingletonHolder() {
+		}
+		
+		/**
+		 * 初始化对象
+		 */
+        private static final HttpClientUtils INSTANCE = new HttpClientUtils();
+    }
+
+	/**
+	 * 获取实例
+	 * 
+	 * @return
+	 */
+	public static final HttpClientUtils getInstance() {
+		return SingletonHolder.INSTANCE;
 	}
 	
 	/**
@@ -40,7 +59,7 @@ public class HttpClientUtils {
 	 * 
 	 * @throws IOException
 	 */
-	public static void close() throws IOException {
+	public void close() throws IOException {
 		if (null != httpClient) {
 			httpClient.close();
 			httpClient = null;
@@ -53,7 +72,7 @@ public class HttpClientUtils {
 	 * @param url
 	 * @return
 	 */
-	public static String get(String url) {
+	public String get(String url) {
 		try {
 			HttpGet request = new HttpGet(url);
 			HttpResponse response = httpClient.execute(request, null).get(10, TimeUnit.SECONDS);

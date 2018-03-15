@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.xy.wmall.common.Constant;
+import com.xy.wmall.enums.TrueFalseStatusEnum;
 import com.xy.wmall.exception.WmallException;
 
 /**
@@ -142,6 +144,17 @@ public class CommonUtils {
 	public static boolean isAjax(HttpServletRequest request) {
 		String header = request.getHeader("x-requested-with"); 
 		return null != header && "XMLHttpRequest".equalsIgnoreCase(header);
+	}
+	
+	/**
+	 * 默认查询条件
+	 * 
+	 * @return
+	 */
+	public static Map<String, Object> defaultQueryMap() {
+		Map<String, Object> map = new HashMap<>();
+		map.put(Constant.ISDELETE, TrueFalseStatusEnum.FALSE.getValue());
+		return map;
 	}
 	
 }

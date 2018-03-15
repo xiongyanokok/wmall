@@ -20,14 +20,6 @@
   		id, proxy_id, details, balance, remark, create_user_id, create_time, update_user_id, update_time, is_delete
   	</sql>
   	
-  	<!-- 根据主键查询 -->
-  	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    	select 
-    	<include refid="Base_Column_List" />
-    	from t_inventory
-		where id = #{id}
-  	</select>
-  	
   	<!-- 新增数据库记录 -->
   	<insert id="insert" parameterType="com.xy.wmall.model.Inventory">
     	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
@@ -129,8 +121,13 @@
     	</where>
   	</update>
   	
+  	<!-- 删除数据库记录 -->
+  	<update id="delete" parameterType="com.xy.wmall.model.Inventory">
+    	update t_inventory set is_delete = 1 where id = #{id}
+  	</update>
+  	
 	<!-- 根据map查询 -->
-  	<select id="getInventory" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	<select id="getByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
   		select
         <include refid="Base_Column_List"/>
         from t_inventory
@@ -169,7 +166,7 @@
   	</select>
   
   	<!-- 根据map查询-->
-  	<select id="listInventory" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	<select id="listByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
   		select
         <include refid="Base_Column_List"/>
         from t_inventory

@@ -7,13 +7,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 线程池
@@ -21,12 +20,8 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
  * @author xiongyan
  * @date 2017年8月29日 上午11:39:06
  */
+@Slf4j
 public class ThreadPoolContext {
-	
-	/**
-	 * logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(ThreadPoolContext.class);
 	
 	/**
 	 * 核心线程数
@@ -110,7 +105,7 @@ public class ThreadPoolContext {
 		try {
 			return future.get();
 		} catch (Exception e) {
-			logger.error("异步查询失败", e);
+			log.error("异步查询失败", e);
 			return null;
 		}
 	}
@@ -126,7 +121,7 @@ public class ThreadPoolContext {
 		try {
 			return future.get(timeout, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
-			logger.error("异步查询失败", e);
+			log.error("异步查询失败", e);
 			return null;
 		}
 	}
