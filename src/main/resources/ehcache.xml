@@ -7,6 +7,6 @@
 	<cache name="product" eternal="true" />
 	
 	<!-- 物流公司缓存 -->
-	<cache name="logistics" eternal="true" />ntsInMemory="100" />
+	<cache name="logistics" eternal="true" />
 
 </ehcache>
