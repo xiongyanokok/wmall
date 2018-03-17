@@ -108,7 +108,11 @@
 	                "bSortable": true,
 				    "sWidth" : "3%",
 				    "mRender": function(data, type, full) {
-	                	return "<span style='color:red;'><b>"+data+"</b></span>";
+				    	if (data) {
+		                	return "<span style='color:red;'><b>"+data+"</b></span>";
+				    	} else {
+				    		return 0;
+				    	}
 	                }
             	}, {
                 	"mData" : null,

@@ -171,5 +171,10 @@ public class Order implements Serializable {
      * 更正类型
      */
     private Integer correctType;
+    
+    /**
+     * 钱包扣款
+     */
+    private Boolean walletDeduct = false;
 	
 }
