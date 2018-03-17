@@ -187,10 +187,7 @@
 				$(form).ajaxSubmit(function(result) {
 					if (result.code == "Y") {
 						parent.dataTable.fnDraw();
-						parent.layer.msg("保存成功", {
-							icon : 6,
-							time : 1000
-						});
+						parent.layer.msg("保存成功", {icon:6, time:1000});
 						layer_close();
 					} else {
 						layer.alert(result.message);
@@ -232,8 +229,7 @@
 				success : function(result) {
 					if (result.code == "Y") {
 						$("#unitPrice_" + index).val(result.message.unitPrice);
-						$("#totalPrice_" + index)
-								.val(result.message.totalPrice);
+						$("#totalPrice_" + index).val(result.message.totalPrice);
 						setOrderPrice();
 					} else {
 						layer.alert(result.message);
