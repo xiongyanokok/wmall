@@ -13,6 +13,14 @@ import com.xy.wmall.pojo.Statistics;
  * @date 2017年10月28日 上午08:53:59
  */
 public interface DeliverMapper extends BaseMapper<Deliver> {
+	
+	/**
+	 * 查询待发货单
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<Deliver> listWaitDeliver(Map<String, Object> map);
 
     /**
      * 发货统计

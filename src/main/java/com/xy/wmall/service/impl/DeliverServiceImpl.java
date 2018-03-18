@@ -100,6 +100,22 @@ public class DeliverServiceImpl extends BaseServiceImpl<DeliverMapper, Deliver> 
     }
     
     /**
+	 * 查询待发货单
+	 * 
+	 * @param map
+	 * @return
+	 */
+    @Override
+	public List<Deliver> listWaitDeliver(Map<String, Object> map) {
+    	Assert.notEmpty(map, "查询数据为空");
+    	try {
+	    	return deliverMapper.listWaitDeliver(map);
+		} catch (Exception e) {
+			throw new WmallException(ErrorCodeEnum.DB_SELECT_ERROR, "【" + map + "】查询待发货失败", e);
+		}
+	}
+	
+    /**
      * 修改发货状态
      * 
      * @param deliver

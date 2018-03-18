@@ -15,6 +15,14 @@ import com.xy.wmall.pojo.Statistics;
 public interface DeliverService extends BaseService<Deliver> {
 	
 	/**
+	 * 查询待发货单
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<Deliver> listWaitDeliver(Map<String, Object> map);
+	
+	/**
      * 修改发货状态
      * 
      * @param deliver

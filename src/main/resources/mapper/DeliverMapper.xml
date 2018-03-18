@@ -268,12 +268,6 @@
         	<if test="id != null">
     			and t1.id = #{id}
   			</if>
-  			<if test="ids != null">
-    			and t1.id in
-				<foreach collection="ids" item="id" open="(" separator="," close=")">
-					#{id}
-				</foreach>
-  			</if>
         	<if test="wechatName != null">
     			and t3.wechat_name like CONCAT('%', #{wechatName}, '%')
   			</if>
@@ -344,6 +338,26 @@
         <if test="orderBy != null">
         	order by t1.${orderBy}
         </if>
+  	</select>
+  	
+  	<!-- 查询待发货单 -->
+  	<select id="listWaitDeliver" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select 
+  			t1.*, t2.wechat_name wechatName
+        from 
+        	t_deliver t1, t_proxy t2
+        <where>
+        	t1.proxy_id = t2.id
+        	and t1.is_delete = 0
+        	and t1.deliver_status = 0
+  			<if test="deliverIds != null">
+    			and t1.id in
+				<foreach collection="deliverIds" item="deliverId" open="(" separator="," close=")">
+					#{deliverId}
+				</foreach>
+  			</if>
+        </where>
+        order by t1.create_time
   	</select>
   	
   	<!-- 批量保存 -->

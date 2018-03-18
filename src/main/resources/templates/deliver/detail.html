@@ -191,6 +191,12 @@
 						[[${logistics.cost }]]
 					</div>
 				</div>
+				<div class="row cl" th:if="${not #strings.isEmpty(logistics.remark)}">
+					<label class="form-label col-xs-4 col-sm-3">备注：</label>
+					<div class="formControls col-xs-8 col-sm-8" style="padding-top: 3px;">
+						[[${logistics.remark }]]
+					</div>
+				</div>
 			</article>
 		</div>
 	</div>	

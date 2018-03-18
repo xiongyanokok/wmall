@@ -314,22 +314,19 @@ public class DeliverController extends BaseController {
 	@RequestMapping(value = "/report", method = { RequestMethod.GET })
 	public String report(Model model, String ids) {
 		Assert.hasLength(ids, "请选择发货单");
-		Map<String, Object> map = CommonUtils.defaultQueryMap();
-		map.put("deliverStatus", TrueFalseStatusEnum.FALSE.getValue());
-		map.put("ids", Arrays.asList(ids.split(",")));
-		map.put("orderBy", "create_time");
-		// 发货单
-		List<Deliver> delivers = deliverService.listByMap(map);
-		Assert.notEmpty(delivers, "查看发货单不存在");
 		// 获取发货单id
-		List<Integer> deliverIds = new ArrayList<>(delivers.size());
-		for (Deliver deliver : delivers) {
-			deliverIds.add(deliver.getId());
+		String[] array = ids.split(",");
+		List<Integer> deliverIds = new ArrayList<>(array.length);
+		for (String deliverId : array) {
+			deliverIds.add(Integer.valueOf(deliverId));
 		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("deliverIds", deliverIds);
+		// 待发货单
+		List<Deliver> delivers = deliverService.listWaitDeliver(map);
+		Assert.notEmpty(delivers, "查看发货单不存在");
 		// 发货单详情
-		Map<String, Object> detailMap = new HashMap<>();
-		detailMap.put("deliverIds", deliverIds);
-		List<DeliverDetail> deliverDetails = deliverDetailService.listByMap(detailMap);
+		List<DeliverDetail> deliverDetails = deliverDetailService.listByMap(map);
 		for (Deliver deliver : delivers) {
 			List<DeliverDetail> details = new ArrayList<>();
 			for (DeliverDetail deliverDetail : deliverDetails) {
