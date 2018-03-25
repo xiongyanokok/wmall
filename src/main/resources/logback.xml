@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="1 seconds" debug="false">
 
     <!-- set env -->
-    <property name="LOGDROOT" value="E:/wmall"/>
+    <property name="LOGDROOT" value="."/>
     <property name="APP_NAME" value="wmall"/>
     <property name="DEBUG_LOG_PATH" value="${LOGDROOT}/logs/${APP_NAME}_debug"/>
     <property name="INFO_LOG_PATH" value="${LOGDROOT}/logs/${APP_NAME}_info"/>
